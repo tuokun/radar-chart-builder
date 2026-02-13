@@ -7,14 +7,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.10</version>
         <relativePath/>
     </parent>
     <groupId>com.radarchart</groupId>
     <artifactId>radar-chart-builder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>radar-chart-builder</name>
-    <description>Radar Chart Builder Backend</description>
+    <description>雷达生成器-后段服务</description>
     <properties>
         <java.version>21</java.version>
         <mariadb.version>11.4.7</mariadb.version>
@@ -25,8 +25,9 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
