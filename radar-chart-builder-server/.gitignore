@@ -9,3 +9,8 @@ mvnw.cmd
 *.iml
 .idea/
 .DS_Store
+.classpath
+.factorypath
+.project
+.settings/
+.vscode/
