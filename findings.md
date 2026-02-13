@@ -24,7 +24,7 @@
 - **SpringBoot 3.5**: 最新稳定版，支持Java 21，性能优化，长期支持
 - **Spring Security**: 安全框架成熟生态完善，支持JWT无状态认证
 - **MariaDB 11.4.7**: MySQL分支，性能优秀，完全兼容MySQL
-- **JPA/Hibernate**: ORM框架，简化数据库操作
+- **MyBatis-Plus**: 增强版MyBatis，内置CRUD，SQL可控，适合复杂查询
 - **JWT**: 无状态认证，适合前后端分离架构
 
 ### 前端技术栈
@@ -73,8 +73,8 @@
 |----------|-----------|
 | 后端：SpringBoot 3.5 + Java 21 | 最新稳定版，长期支持，性能优秀，社区活跃 |
 | 数据库：MariaDB 11.4.7 | 开源、高性能、与MySQL兼容，文档丰富 |
+| ORM：MyBatis-Plus | SQL可控性强，适合复杂查询，中文资料丰富，性能优化方便（替代JPA） |
 | 认证：JWT + Spring Security | 无状态，适合前后端分离，Spring Security成熟可靠 |
-| ORM：JPA/Hibernate | 减少SQL编写，提高开发效率，类型安全 |
 | 前端框架：Vue 3 | 学习曲线平缓，中文文档完善，生态丰富，国内社区活跃 |
 | UI库：Element Plus | Vue 3官方推荐，组件丰富，设计规范统一 |
 | 图表库：ECharts | 原生支持雷达图，功能强大，中文文档丰富，示例多 |
@@ -106,6 +106,55 @@
 - Spring Security JWT: https://spring.io/guides/gs/securing-web/
 - ECharts雷达图示例: https://echarts.apache.org/examples/zh/index.html
 - Vue 3官方教程: https://cn.vuejs.org/guide/introduction.html
+
+## JPA vs MyBatis-Plus 决策过程
+<!-- WHAT: 持久层框架选型对比 -->
+<!-- WHY: 记录技术选型的思考过程 -->
+
+### 决策背景
+初始方案使用JPA/Hibernate作为ORM框架，但考虑到项目特点和长远发展，决定切换到MyBatis-Plus。
+
+### JPA/Hibernate 优势与劣势
+**优势：**
+- 开发速度快，基本不需要写SQL
+- 类型安全，编译期发现问题
+- 自动建表，维护简单
+- 一级/二级缓存提升性能
+
+**劣势：**
+- SQL控制弱，复杂查询性能优化困难
+- N+1查询问题常见
+- 黑盒操作，生成的SQL不可控
+- 性能调优复杂，需要理解JPA概念
+- 不适合复杂查询（多表关联、动态SQL、存储过程）
+
+### MyBatis-Plus 优势与劣势
+**优势：**
+- SQL控制强，可以写SQL，也可以用内置方法
+- 性能可优化，SQL可见
+- 学习简单，对SQL熟悉就很快上手
+- 中文文档丰富，国内使用广泛
+- 动态SQL，支持复杂条件查询
+- 代码生成器，自动生成Entity、Mapper、Service、Controller
+- Lambda表达式，类型安全
+- 内置分页插件
+- 批量操作性能优于JPA
+
+**劣势：**
+- 需要手动建表，没有自动建表
+- 需要写Mapper（虽然简化了）
+- 没有缓存，需要自己集成Redis
+- 换数据库需要修改SQL
+
+### 决策理由
+1. **项目特点匹配**：雷达图数据以JSON格式存储，未来有模板搜索、用户图表统计等复杂查询需求
+2. **性能可控**：SQL可见，可以针对复杂查询进行优化
+3. **学习成本低**：对SQL熟悉就很快上手，不需要理解JPA抽象概念
+4. **中文生态好**：国内使用广泛，遇到问题容易解决
+5. **迁移成本低**：当前只有User一个实体，迁移成本很低
+
+### 迁移时机
+选择在项目早期进行迁移，只有User一个实体，代码量小，迁移成本最低。
 
 ## Backend Implementation Details
 <!-- WHAT: 后端实现细节 -->

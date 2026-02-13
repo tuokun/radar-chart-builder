@@ -33,9 +33,15 @@ Phase 1: 后端基础架构搭建（进行中）
 - [x] Task 5: 实现Spring Security配置
 - [x] Task 6: 实现用户认证Service
 - [x] Task 7: 实现认证Controller
-- [ ] Task 8: 测试API端点
-- [ ] 集成Swagger/Knife4j API文档
-- **Status:** in_progress
+- [x] Task 8: JPA迁移到MyBatis-Plus（新增）
+   - [x] 修改pom.xml，替换依赖
+   - [x] 修改User实体（JPA注解 → MyBatis-Plus注解）
+   - [x] 创建UserMapper（替换UserRepository）
+   - [x] 修改application.yml配置
+   - [x] 创建数据库建表SQL脚本
+   - [x] 更新AuthServiceImpl使用MyBatis-Plus
+   - [ ] Task 9: 测试迁移是否成功
+   - **Status:** in_progress
 
 ### Phase 2: 雷达图核心功能开发
 <!-- WHAT: 实现雷达图相关的实体、服务和API -->
@@ -95,6 +101,7 @@ Phase 1: 后端基础架构搭建（进行中）
 |----------|-----------|
 | SpringBoot 3.5 + Java 21 | 最新的稳定版本，长期支持，性能优秀 |
 | MariaDB 11.4.7 | 开源、高性能、与MySQL兼容 |
+| MyBatis-Plus | SQL可控性强，适合复杂查询，中文资料丰富，性能优化方便 |
 | JWT认证 | 无状态，适合前后端分离架构 |
 | Vue3 + Element Plus | 学习曲线平缓，文档完善，国内生态好 |
 | ECharts | 原生支持雷达图，功能强大，中文文档丰富 |
@@ -112,7 +119,8 @@ Phase 1: 后端基础架构搭建（进行中）
 <!-- - Update phase status as you progress: pending → in_progress → complete -->
 <!-- - Re-read this plan before major decisions (attention manipulation) -->
 <!-- - Log ALL errors - they help avoid repetition -->
-- 后端基础架构正在另一独立会话中执行（executing-plans）
-- 明天继续时先检查后端执行进度
+- 后端基础架构已完成Task 1-7（JPA版本）
+- 决定将JPA迁移到MyBatis-Plus，已创建详细迁移计划
+- 迁移计划文档：docs/plans/2026-02-13-migrate-jpa-to-mybatis-plus.md
 - 前端开发需要等后端API基本完成后再开始
 - 模板功能是待定功能，MVP阶段暂不实现

@@ -33,6 +33,17 @@
   - 成功构建项目
   - 完成Task 1-7的所有代码实现
   - 每个Task完成后都进行了Git提交
+- **2026-02-13 09:15 技术选型调整决策**：
+  - 分析JPA vs MyBatis-Plus的优劣
+  - 决定将JPA迁移到MyBatis-Plus
+  - 更新task_plan.md，添加迁移任务（Task 8）
+  - 更新findings.md，记录决策过程和对比分析
+  - 创建迁移计划文档准备提交
+- **2026-02-13 09:45 创建详细迁移计划**：
+  - 创建docs/plans/2026-02-13-migrate-jpa-to-mybatis-plus.md
+  - 制定9个详细迁移任务（修改pom.xml、实体、Mapper、配置、建表SQL等）
+  - 更新task_plan.md，记录技术栈变更
+  - 准备交给后端会话执行迁移
 
 <!-- Files created/modified: -->
 - `项目规划文档.md` (created)
@@ -83,7 +94,7 @@
 
 | Test | Input | Expected | Actual | Status |
 |------|-------|----------|--------|--------|
-| 后端API测试 | 独立会话执行中 | API端点正常工作 | 待测试 | ⏳ |
+| 后端API测试 | 迁移到MyBatis-Plus后 | API端点正常工作 | 待迁移后测试 | ⏳ |
 
 ## Error Log
 <!-- WHAT: 错误日志 -->
@@ -93,6 +104,7 @@
 |-----------|-------|---------|------------|
 | 2026-02-13 08:05 | MariaDB 11.4.7下载失败（artifactory不可用） | 1 | 改用MariaDB 3.4.1版本 |
 | 2026-02-13 08:05 | Maven本地仓库路径错误（/User vs /Users） | 1 | 使用-Dmaven.repo.local指定正确路径 |
+| 2026-02-13 09:00 | LSP报错：MyBatis-Plus注解和Mapper导入无法解析 | 1 | 这是IDE的LSP错误，代码正确 |
 
 ## 5-Question Reboot Check
 <!-- WHAT: 五问重启测试 -->
@@ -100,11 +112,11 @@
 
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 1 - 后端基础架构搭建（进行中） |
-| Where am I going? | 完成Phase 1后，继续Phase 2雷达图核心功能 |
-| What's the goal? | 构建雷达图生成器，后端SpringBoot，前端Vue3 + ECharts |
-| What have I learned? | 技术选型已确定：Vue3、Element Plus、ECharts（见findings.md） |
-| What have I done? | 创建项目文档、实现计划、技术选型（见progress.md） |
+| Where am I? | Phase 1 - 后端基础架构搭建（JPA迁移到MyBatis-Plus前） |
+| Where am I going? | 执行JPA到MyBatis-Plus的迁移，然后继续Phase 2雷达图核心功能 |
+| What's the goal? | 构建雷达图生成器，后端SpringBoot + MyBatis-Plus，前端Vue3 + ECharts |
+| What have I learned? | 技术选型已确定：MyBatis-Plus、Vue3、Element Plus、ECharts（见findings.md） |
+| What have I done? | 创建项目文档、实现计划、技术选型、迁移计划（见progress.md） |
 
 ---
 <!--
