@@ -25,14 +25,14 @@ Phase 1: 后端基础架构搭建（进行中）
   - [x] 创建RadarChartApplication.java主类
   - [x] 创建application.yml配置文件
   - [x] 创建.gitignore
-  - [ ] 验证项目能正常启动（mvn spring-boot:run）
-  - [ ] 提交初始代码
-- [ ] Task 2: 创建User实体和Repository
-- [ ] Task 3: 创建DTO类
-- [ ] Task 4: 实现JWT工具类
-- [ ] Task 5: 实现Spring Security配置
-- [ ] Task 6: 实现用户认证Service
-- [ ] Task 7: 实现认证Controller
+  - [x] 验证项目能正常构建
+  - [x] 提交初始代码
+- [x] Task 2: 创建User实体和Repository
+- [x] Task 3: 创建DTO类
+- [x] Task 4: 实现JWT工具类
+- [x] Task 5: 实现Spring Security配置
+- [x] Task 6: 实现用户认证Service
+- [x] Task 7: 实现认证Controller
 - [ ] Task 8: 测试API端点
 - [ ] 集成Swagger/Knife4j API文档
 - **Status:** in_progress
