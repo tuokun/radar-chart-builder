@@ -1,6 +1,6 @@
 spring:
   application:
-    name: radar-chart-builder
+    name: radar-chart-builder-server
   datasource:
     url: jdbc:mariadb://192.168.1.109:3306/radar_chart_db
     username: root
