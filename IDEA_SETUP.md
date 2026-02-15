@@ -40,9 +40,10 @@ radar-chart-builder/
 
 ⚠️ **This project uses IntelliJ IDEA exclusively.**
 
-- Eclipse project files (`.project`, `.classpath`, `.settings/`, `bin/`) are **FORBIDDEN**
+- Eclipse project files (`.project`, `.classpath`, `.settings/`, `bin/`, `.factorypath`) are **FORBIDDEN**
 - These files are listed in `.gitignore` and will be ignored
 - If you accidentally generate them, run: `mvn clean`
+- `.factorypath` is Eclipse's annotation processor configuration file (not needed in IDEA)
 
 ### Build Output
 

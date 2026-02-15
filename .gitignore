@@ -18,6 +18,7 @@ mvnw.cmd
 .classpath
 .settings/
 bin/
+.factorypath
 
 # VS Code
 .vscode/

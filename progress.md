@@ -50,6 +50,12 @@
   - 更新pom.xml，添加maven-clean-plugin自动清理Eclipse文件
   - 创建IDEA_SETUP.md配置说明文档
   - 验证所有Eclipse文件已删除
+- **2026-02-15 22:35 彻底清理所有Eclipse文件（包括.factorypath）**：
+  - 删除.factorypath文件（Eclipse注解处理器配置）
+  - 更新.gitignore，添加.factorypath忽略规则
+  - 更新pom.xml，在maven-clean-plugin中添加.factorypath清理
+  - 更新IDEA_SETUP.md，补充.factorypath说明
+  - 最终验证：所有Eclipse文件（.project、.classpath、.factorypath、.settings/、bin/）已完全删除
 
 <!-- Files created/modified: -->
 - `项目规划文档.md` (created)
