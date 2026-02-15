@@ -12,7 +12,17 @@ mvnw.cmd
 *.iml
 *.iws
 *.ipr
+
+# Eclipse - IDEA专用项目，禁止生成Eclipse文件
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
 .vscode/
+
+# Vim
 *.swp
 *.swo
 *~

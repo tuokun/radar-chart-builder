@@ -44,6 +44,12 @@
   - 制定9个详细迁移任务（修改pom.xml、实体、Mapper、配置、建表SQL等）
   - 更新task_plan.md，记录技术栈变更
   - 准备交给后端会话执行迁移
+- **2026-02-15 22:30 清理Eclipse文件并配置IDEA专用设置**：
+  - 删除所有Eclipse相关文件（bin/、.project、.classpath、.settings/）
+  - 更新.gitignore，明确添加Eclipse文件忽略规则
+  - 更新pom.xml，添加maven-clean-plugin自动清理Eclipse文件
+  - 创建IDEA_SETUP.md配置说明文档
+  - 验证所有Eclipse文件已删除
 
 <!-- Files created/modified: -->
 - `项目规划文档.md` (created)
