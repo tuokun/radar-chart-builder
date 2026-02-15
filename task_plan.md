@@ -86,6 +86,44 @@ Phase 1: 后端基础架构搭建（进行中）
 - [ ] 测试小程序功能
 - **Status:** pending
 
+### Phase 6: JWT认证优化（待定）
+<!-- WHAT: 优化JWT认证机制，提升性能和安全性 -->
+<!-- WHY: 当用户规模达到一定水平时，现有JWT机制需要优化 -->
+<!-- 触发条件：日活用户 > 1000 或 API QPS > 100 -->
+- **优化目标：**
+  - 减少数据库查询压力（用户信息验证）
+  - 提升token安全性（防止token泄露）
+  - 实现token刷新机制（避免频繁重新登录）
+  - 支持token主动撤销（退出登录、修改密码）
+
+- **技术方案选择（二选一）：**
+  - **方案A：JWT + Redis存储**
+    - Access Token：有效期短（如2小时）
+    - Refresh Token：有效期长（如7天），存储在Redis
+    - 用户信息缓存在Redis，减少数据库查询
+    - 优点：性能最优，支持token撤销
+    - 缺点：需要维护Redis，增加系统复杂度
+  - **方案B：Refresh Token机制（数据库存储）**
+    - Access Token：有效期短（如2小时）
+    - Refresh Token：存储在数据库，关联用户ID
+    - 定期清理过期的Refresh Token
+    - 优点：不需要额外的Redis，实现相对简单
+    - 缺点：性能不如Redis方案，数据库压力较大
+
+- **实施步骤（待触发后执行）：**
+  - [ ] 添加Redis依赖和配置
+  - [ ] 创建RefreshToken实体和Mapper（如选择方案B）
+  - [ ] 修改JwtUtil，支持Access Token和Refresh Token生成
+  - [ ] 创建Redis工具类（如选择方案A）
+  - [ ] 修改AuthServiceImpl，实现token刷新逻辑
+  - [ ] 修改SecurityConfig，支持双token验证
+  - [ ] 创建/api/auth/refresh接口
+  - [ ] 实现退出登录时的token撤销
+  - [ ] 添加定时任务清理过期token
+  - [ ] 更新API文档
+  - [ ] 测试token刷新流程
+- **Status:** pending
+
 ## Key Questions
 <!-- WHAT: 项目开发过程中需要回答的关键问题 -->
 <!-- WHY: 指导技术选型和架构决策 -->

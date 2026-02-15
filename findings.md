@@ -156,6 +156,135 @@
 ### 迁移时机
 选择在项目早期进行迁移，只有User一个实体，代码量小，迁移成本最低。
 
+## JWT认证优化方案研究
+<!-- WHAT: JWT认证优化的技术方案分析 -->
+<!-- WHY: 为未来的性能和安全优化做准备 -->
+
+### 当前JWT机制
+**现状：**
+- 使用JWT进行无状态认证
+- 单一token，有效期24小时
+- token包含用户ID和用户名
+- 无token刷新机制
+
+**局限性：**
+- token有效期长（24小时），泄露风险高
+- 无法主动撤销token（退出登录、修改密码）
+- 每次请求都需要验证token，无法缓存用户信息
+- 高并发时token解析和验证会成为性能瓶颈
+
+### 优化方案对比
+
+#### 方案A：JWT + Redis存储
+
+**架构：**
+```
+┌─────────┐
+│  登录   │
+└────┬────┘
+     │
+     ├─> 生成Access Token（2小时） → 返回客户端
+     ├─> 生成Refresh Token（7天） → 存储Redis
+     └─> 用户信息缓存 → Redis（key: user:{userId}）
+```
+
+**优点：**
+- ✅ 性能最优：用户信息从Redis读取，不查数据库
+- ✅ 安全性高：Access Token短期，Refresh Token可撤销
+- ✅ 支持主动撤销：退出登录时删除Redis中的token
+- ✅ 缓存命中率高：热点用户信息常驻内存
+- ✅ 可扩展性强：Redis支持集群
+
+**缺点：**
+- ❌ 系统复杂度增加：需要维护Redis集群
+- ❌ 成本增加：Redis服务器和运维成本
+- ❌ 一致性风险：Redis缓存和数据库需要同步
+
+**技术栈：**
+- Spring Data Redis
+- Lettuce连接池
+- Redisson（分布式锁）
+
+---
+
+#### 方案B：Refresh Token机制（数据库存储）
+
+**架构：**
+```
+┌─────────┐
+│  登录   │
+└────┬────┘
+     │
+     ├─> 生成Access Token（2小时） → 返回客户端
+     └─> 生成Refresh Token（7天） → 存储数据库
+         └─> refresh_tokens表（id, user_id, token, expires_at）
+```
+
+**优点：**
+- ✅ 实现相对简单：不需要额外的Redis
+- ✅ 成本低：利用现有数据库
+- ✅ 维护简单：无需管理新的基础设施
+- ✅ 数据一致性：Refresh Token在数据库，与用户数据同源
+
+**缺点：**
+- ❌ 性能不如Redis：每次刷新token都需要查询数据库
+- ❌ 数据库压力大：高并发时数据库成为瓶颈
+- ❌ 撤销性能：批量删除token时需要更新数据库
+
+**数据表设计：**
+```sql
+CREATE TABLE refresh_tokens (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  token VARCHAR(512) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_user_id (user_id),
+  INDEX idx_expires_at (expires_at)
+);
+```
+
+**技术栈：**
+- MyBatis-Plus（已有）
+- 定时任务（Spring @Scheduled）
+- 数据库索引优化
+
+---
+
+### 优化建议
+
+#### 触发条件
+建议在以下条件之一满足时启动优化：
+- 日活用户（DAU）> 1000
+- API QPS > 100
+- 登录响应时间 > 500ms
+- 数据库CPU使用率 > 60%
+
+#### 推荐方案选择
+| 用户规模 | 推荐方案 | 理由 |
+|---------|----------|------|
+| 小型（< 1000 DAU） | 方案B（数据库Refresh Token） | 实现简单，成本低，满足需求 |
+| 中型（1000-10000 DAU） | 方案B（数据库Refresh Token） | 可通过数据库索引优化解决性能问题 |
+| 大型（> 10000 DAU） | 方案A（JWT + Redis） | 性能要求高，需要Redis缓存 |
+
+#### 实施优先级
+1. **Phase 1（立即）**：优化现有JWT配置
+   - 缩短token有效期至2小时
+   - 增强token验证逻辑
+   - 添加token使用日志
+
+2. **Phase 2（触发条件满足）**：实施Refresh Token
+   - 创建refresh_tokens表
+   - 实现token刷新接口
+   - 实现退出登录时撤销token
+
+3. **Phase 3（大规模应用）**：引入Redis
+   - 迁移到JWT + Redis方案
+   - 实现用户信息缓存
+   - 实现分布式token管理
+
+---
+
 ## Backend Implementation Details
 <!-- WHAT: 后端实现细节 -->
 <!-- WHY: 记录后端开发的技术细节 -->

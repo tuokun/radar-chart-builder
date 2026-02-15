@@ -138,3 +138,21 @@
   - Include timestamps for errors to track when issues occurred
 -->
 *明天继续时，先检查后端独立会话的执行进度*
+
+## Session: 2026-02-15 22:45
+
+### JWT认证优化计划
+<!-- WHAT: 规划JWT认证优化方案 -->
+<!-- WHY: 为未来的性能和安全优化做准备 -->
+- **Status:** pending
+- **Actions taken:**
+  - 分析当前JWT机制的局限性
+  - 研究JWT + Redis方案
+  - 研究Refresh Token方案（数据库存储）
+  - 制定优化触发条件和方案选择建议
+  - 添加Phase 6到task_plan.md（JWT认证优化待定）
+  - 在findings.md中记录详细的方案对比
+  - 定义实施优先级（Phase 1、2、3）
+- **Files created/modified:**
+  - `task_plan.md` (modified - 添加Phase 6)
+  - `findings.md` (modified - 添加JWT优化方案研究)
