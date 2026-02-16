@@ -18,8 +18,6 @@
     <properties>
         <java.version>21</java.version>
         <mariadb.version>11.4.7</mariadb.version>
-        <!-- 禁用Eclipse项目生成 -->
-        <eclipse.useProjectReferences>false</eclipse.useProjectReferences>
     </properties>
     <dependencies>
         <dependency>
@@ -28,8 +26,8 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.7</version>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.16</version>
         </dependency>
          <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,24 +45,24 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.12.3</version>
+            <version>0.13.0</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.12.3</version>
+            <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.3</version>
+            <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.7</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -83,52 +81,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
-            <!-- 清理插件：自动删除bin目录和Eclipse文件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.3.2</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>bin</directory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                        <fileset>
-                            <directory>.</directory>
-                            <includes>
-                                <include>.classpath</include>
-                                <include>.project</include>
-                                <include>.factorypath</include>
-                                <include>.settings</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>.settings</directory>
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <!-- Spring Boot插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                 <configuration>
-                 </configuration>
             </plugin>
         </plugins>
     </build>

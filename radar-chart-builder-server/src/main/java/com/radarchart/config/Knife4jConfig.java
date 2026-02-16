@@ -1,33 +1,32 @@
 package com.radarchart.config;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.core.models.GroupedOpenApi;
-import org.springdoc.core.models.OpenAPI;
-import org.springdoc.core.models.info.Contact;
-import org.springdoc.core.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Arrays;
 
 @Configuration
 public class Knife4jConfig {
 
     @Bean
-    public GroupedOpenAPI customOpenAPI() {
-        return new GroupedOpenApi()
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
                 .info(new Info()
                         .title("雷达图生成器API")
                         .version("1.0.0")
                         .description("雷达图生成器后端API文档")
                         .contact(new Contact()
                                 .name("API Support")
-                                .email("support@example.com")))
-                .tags(Arrays.asList(
-                        new Tag()
-                                .name("用户认证")
-                                .description("用户注册、登录相关接口")));
+                                .email("support@example.com")));
+    }
+
+    @Bean
+    public GroupedOpenApi groupedOpenAPI() {
+        return GroupedOpenApi.builder()
+                .group("default")
+                .pathsToMatch("/api/**")
+                .build();
     }
 }

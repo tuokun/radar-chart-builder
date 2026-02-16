@@ -20,7 +20,15 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
 
 server:
-  port: 8080
+  port: 8081
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.radarchart: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
 
 #过期时间：12小时
 jwt:
