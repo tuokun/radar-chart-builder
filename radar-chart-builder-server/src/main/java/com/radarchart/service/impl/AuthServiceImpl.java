@@ -11,12 +11,16 @@ import com.radarchart.exception.ResourceNotFoundException;
 import com.radarchart.mapper.UserMapper;
 import com.radarchart.service.AuthService;
 import com.radarchart.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -29,15 +33,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+        LOGGER.info("开始用户注册，用户名: {}, 邮箱: {}", request.getUsername(), request.getEmail());
+
         LambdaQueryWrapper<User> usernameWrapper = new LambdaQueryWrapper<>();
         usernameWrapper.eq(User::getUsername, request.getUsername());
         if (userMapper.selectCount(usernameWrapper) > 0) {
+            LOGGER.warn("用户注册失败，用户名已存在: {}", request.getUsername());
             throw new BadRequestException("用户名已存在");
         }
 
         LambdaQueryWrapper<User> emailWrapper = new LambdaQueryWrapper<>();
         emailWrapper.eq(User::getEmail, request.getEmail());
         if (userMapper.selectCount(emailWrapper) > 0) {
+            LOGGER.warn("用户注册失败，邮箱已被注册: {}", request.getEmail());
             throw new BadRequestException("邮箱已被注册");
         }
 
@@ -48,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
         user.setNickname(request.getNickname());
 
         userMapper.insert(user);
+        LOGGER.info("用户注册成功，用户ID: {}, 用户名: {}", user.getId(), user.getUsername());
 
         String token = jwtUtil.generateToken(user.getId(), user.getUsername());
         UserResponse userResponse = UserResponse.fromEntity(user);
@@ -57,6 +66,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        LOGGER.info("开始用户登录，账号: {}", request.getAccount());
+
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, request.getAccount())
                .or()
@@ -64,16 +75,19 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userMapper.selectOne(wrapper);
         if (user == null) {
+            LOGGER.warn("用户登录失败，账号不存在: {}", request.getAccount());
             throw new ResourceNotFoundException("账号不存在");
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            LOGGER.warn("用户登录失败，密码错误，账号: {}", request.getAccount());
             throw new BadRequestException("密码错误");
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getUsername());
         UserResponse userResponse = UserResponse.fromEntity(user);
 
+        LOGGER.info("用户登录成功，用户ID: {}, 用户名: {}", user.getId(), user.getUsername());
         return new AuthResponse(token, userResponse);
     }
 }
