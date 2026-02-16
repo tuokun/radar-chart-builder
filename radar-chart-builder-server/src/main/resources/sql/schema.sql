@@ -1,9 +1,9 @@
 -- 创建数据库
-CREATE DATABASE IF NOT EXISTS radar_chart_db
+CREATE DATABASE IF NOT EXISTS radar_chart_builder
   DEFAULT CHARACTER SET utf8mb4
   DEFAULT COLLATE utf8mb4_unicode_ci;
 
-USE radar_chart_db;
+USE radar_chart_builder;
 
 -- 创建users表
 CREATE TABLE IF NOT EXISTS users (
