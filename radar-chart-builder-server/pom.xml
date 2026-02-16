@@ -40,6 +40,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.12.3</version>
@@ -106,6 +111,7 @@
                                 <include>.classpath</include>
                                 <include>.project</include>
                                 <include>.factorypath</include>
+                                <include>.settings</include>
                             </includes>
                         </fileset>
                         <fileset>
