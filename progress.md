@@ -60,7 +60,7 @@
 <!-- Files created/modified: -->
 - `项目规划文档.md` (created)
 - `产品需求文档.md` (created)
-- `docs/plans/2025-02-12-backend-initial-setup-and-auth.md` (created)
+- `docs/plans/2025-02-12-后端初始化与认证.md` (created)
 - `task_plan.md` (created)
 - `findings.md` (created)
 - `progress.md` (created)
@@ -81,9 +81,45 @@
 - `radar-chart-builder-server/src/main/java/com/radarchart/controller/AuthController.java` (created)
 
 ### Phase 2: 雷达图核心功能开发
-- **Status:** pending
-- Actions taken:
-- Files created/modified:
+- **Status:** in_progress
+- **Started:** 2026-02-16
+- **Updated:** 2026-02-16
+
+**Actions taken:**
+  - 完成需求分析和设计决策（多数据系列、四表关联结构、维度范围自定义）
+  - 创建设计文档：docs/plans/2026-02-16-雷达图核心功能设计.md
+  - 创建实施计划：docs/plans/2026-02-16-雷达图核心功能实施计划.md
+  - 创建API测试文档：docs/接口文档/雷达图API测试指南.md
+  - 实现雷达图核心实体类（RadarChart、Dimension、DataSeries、SeriesData）
+  - 创建数据库建表SQL（V2__radar_chart_tables.sql）
+  - 创建Mapper接口
+  - 创建Param DTO（CreateRadarChartParam、UpdateRadarChartParam、AddDataSeriesParam等）
+  - 创建Result DTO（RadarChartResult、DimensionResult、SeriesResult、ChartDataResult）
+  - 创建Service接口和骨架实现
+  - 文档中文化重命名
+
+**2026-02-16 代码优化：**
+  - 移除项目中所有Lombok依赖和相关注解
+  - 手动编写所有实体类、DTO类的getter/setter/constructor/toString方法
+  - 更新Service实现类，手动添加构造函数
+  - 更新文档，记录"不使用Lombok"技术决策
+
+**Files created/modified:**
+  - `docs/plans/2026-02-16-雷达图核心功能设计.md` (created)
+  - `docs/plans/2026-02-16-雷达图核心功能实施计划.md` (created)
+  - `docs/接口文档/雷达图API测试指南.md` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/entity/RadarChart.java` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/entity/Dimension.java` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/entity/DataSeries.java` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/entity/SeriesData.java` (created)
+  - `radar-chart-builder-server/src/main/resources/db/migration/V2__radar_chart_tables.sql` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/mapper/` (4 files created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/dto/param/` (5 files created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/dto/result/` (4 files created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/service/RadarChartService.java` (created)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/service/impl/RadarChartServiceImpl.java` (created)
+  - `task_plan.md` (modified)
+  - `findings.md` (modified)
 
 ### Phase 3: 模板功能开发
 - **Status:** pending

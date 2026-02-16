@@ -2,7 +2,7 @@ spring:
   application:
     name: radar-chart-builder-server
   datasource:
-    url: jdbc:mariadb://192.168.1.109:3306/radar_chart_db
+    url: jdbc:mariadb://192.168.1.109:3306/radar_chart_builder
     username: root
     password: cgfhsc
     driver-class-name: org.mariadb.jdbc.Driver

@@ -1,11 +1,10 @@
-package com.radarchart.dto;
+package com.radarchart.dto.param;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Size(max = 50, message = "昵称长度不能超过50个字符")
-public class RegisterRequest {
+public class RegisterParam {
     @NotBlank(message = "用户名不能为空")
     @Size(min = 3, max = 50, message = "用户名长度必须在3-50个字符之间")
     private String username;
@@ -18,6 +17,7 @@ public class RegisterRequest {
     @Size(min = 6, max = 100, message = "密码长度必须在6-100个字符之间")
     private String password;
 
+    @Size(max = 50, message = "昵称长度不能超过50个字符")
     private String nickname;
 
     public String getUsername() {
@@ -54,7 +54,7 @@ public class RegisterRequest {
 
     @Override
     public String toString() {
-        return "RegisterRequest{" +
+        return "RegisterParam{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='***'" +

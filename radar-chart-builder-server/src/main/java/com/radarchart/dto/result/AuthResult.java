@@ -1,13 +1,13 @@
-package com.radarchart.dto;
+package com.radarchart.dto.result;
 
-public class AuthResponse {
+public class AuthResult {
     private String token;
-    private UserResponse user;
+    private UserResult user;
 
-    public AuthResponse() {
+    public AuthResult() {
     }
 
-    public AuthResponse(String token, UserResponse user) {
+    public AuthResult(String token, UserResult user) {
         this.token = token;
         this.user = user;
     }
@@ -20,17 +20,17 @@ public class AuthResponse {
         this.token = token;
     }
 
-    public UserResponse getUser() {
+    public UserResult getUser() {
         return user;
     }
 
-    public void setUser(UserResponse user) {
+    public void setUser(UserResult user) {
         this.user = user;
     }
 
     @Override
     public String toString() {
-        return "AuthResponse{" +
+        return "AuthResult{" +
                 "token='" + token.substring(0, Math.min(20, token.length())) + "...'" +
                 ", user=" + user +
                 '}';

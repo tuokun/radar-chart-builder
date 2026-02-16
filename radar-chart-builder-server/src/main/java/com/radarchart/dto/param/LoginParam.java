@@ -1,8 +1,8 @@
-package com.radarchart.dto;
+package com.radarchart.dto.param;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class LoginParam {
     @NotBlank(message = "账号不能为空")
     private String account;
 
@@ -27,7 +27,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRequest{" +
+        return "LoginParam{" +
                 "account='" + account + '\'' +
                 ", password='***'" +
                 '}';

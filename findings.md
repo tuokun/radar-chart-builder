@@ -285,6 +285,72 @@ CREATE TABLE refresh_tokens (
 
 ---
 
+## 雷达图核心功能设计决策
+<!-- WHAT: 雷达图数据模型和API设计决策 -->
+<!-- WHY: 记录核心功能的设计思路 -->
+
+### 数据模型决策
+
+#### 方案选择：四表关联结构
+
+**决策背景：**
+需要在雷达图中支持多数据系列对比（如"小明"和"小红"的成绩对比）。
+
+**可选方案对比：**
+
+| 方案 | 优点 | 缺点 |
+|------|------|------|
+| 单表+JSON | 简单，单个表搞定 | JSON不便查询统计，扩展性差 |
+| 两表结构 | 减少表数量 | 维度作为JSON不便查询 |
+| **四表关联** | 结构清晰，查询灵活，易扩展 | 查询需要多表JOIN |
+
+**最终选择：四表关联**
+```
+RadarChart (1) ──── (N) Dimension
+    │
+    └── (N) DataSeries ──── (N) SeriesData ──── (1) Dimension
+```
+
+**理由：**
+1. 支持多数据系列对比功能
+2. 数据规范化，便于后续统计查询
+3. 扩展性强，便于添加新功能
+4. MyBatis-Plus 对多表关联支持良好
+
+### 需求细节决策
+
+| 决策点 | 选择 | 理由 |
+|--------|------|------|
+| 数据系列 | 支持多系列 | 用户需要对比不同组数据 |
+| 维度范围 | 支持minValue/maxValue | 不总是从0开始（如温度、评分） |
+| 图表样式 | 固定样式 | MVP阶段简化开发 |
+| 维度配置 | 独立配置 | 每个雷达图独立配置维度 |
+| 数据修改 | 支持修改 | 用户需要调整数据值 |
+| DTO命名 | Param/Result | 语义清晰，区分请求响应 |
+| 字段命名 | createTime/updateTime | 用户偏好 |
+
+### API设计决策
+
+**基础路径：** `/api/radar-charts`
+
+**核心端点：**
+- POST `/api/radar-charts` - 创建雷达图
+- GET `/api/radar-charts` - 获取列表
+- GET `/api/radar-charts/{id}` - 获取详情
+- PUT `/api/radar-charts/{id}` - 更新基本信息
+- DELETE `/api/radar-charts/{id}` - 删除雷达图
+- POST `/api/radar-charts/{id}/series` - 添加数据系列
+- GET `/api/radar-charts/{id}/export` - 导出ECharts格式
+
+**业务规则：**
+- 至少需要3个维度
+- 数据值必须在维度范围内
+- 级联删除（删除图表→删除所有关联数据）
+
+**文档：** `docs/plans/2026-02-16-雷达图核心功能设计.md`
+
+---
+
 ## Backend Implementation Details
 <!-- WHAT: 后端实现细节 -->
 <!-- WHY: 记录后端开发的技术细节 -->
@@ -305,25 +371,27 @@ radar-chart-builder/
 
 ### 核心依赖说明
 - **spring-boot-starter-web**: Web应用基础，内嵌Tomcat
-- **spring-boot-starter-data-jpa**: JPA持久化，简化数据库操作
+- **mybatis-plus-boot-starter**: MyBatis-Plus持久化框架，简化CRUD操作
 - **spring-boot-starter-security**: 安全框架，提供认证授权
 - **spring-boot-starter-validation**: 参数验证（@NotBlank、@Email等）
 - **jjwt-api/jjwt-impl/jjwt-jackson**: JWT token生成和验证（版本0.12.3）
 - **mariadb-java-client**: MariaDB数据库驱动
-- **lombok**: 简化Java代码（@Data、@NoArgsConstructor等）
+- **knife4j-openapi3-jakarta**: API文档工具（Swagger增强版）
 - **spring-boot-starter-test**: 测试框架
 - **spring-security-test**: Spring Security测试支持
 
 ### 配置说明
-- **数据库**: MariaDB 11.4.7，连接地址jdbc:mariadb://localhost:3306/radar_chart_db
-- **JPA**: ddl-auto=update（自动更新表结构），show-sql=true（显示SQL）
+- **数据库**: MariaDB，连接地址jdbc:mariadb://localhost:3306/radar_chart
+- **MyBatis-Plus**: 日志输出（mybatis-plus.configuration.log-impl=stdout）
 - **JWT**:
   - secret: your-256-bit-secret-key-change-this-in-production（需在生产环境修改）
   - expiration: 86400000（24小时）
 - **Server端口**: 8080
+- **Knife4j**: /doc.html（API文档地址）
 
-### 待实现模块（按计划文档）
-- User实体和Repository
+### 已实现模块
+**用户认证（Phase 1）：**
+- User实体和Mapper
 - DTO类（RegisterRequest、LoginRequest、AuthResponse、UserResponse）
 - JWT工具类（JwtConfig、JwtUtil）
 - Spring Security配置（SecurityConfig、JwtAuthenticationFilter）
@@ -331,11 +399,18 @@ radar-chart-builder/
 - 认证Controller（AuthController）
 - 异常处理（BadRequestException、ResourceNotFoundException、GlobalExceptionHandler）
 
+**雷达图核心功能（Phase 2 进行中）：**
+- 雷达图实体（RadarChart、Dimension、DataSeries、SeriesData）
+- Mapper接口
+- Param/Result DTO
+- Service接口和骨架实现
+
 ### 待验证项
-- [ ] MariaDB是否已安装并运行在localhost:3306
-- [ ] 数据库用户名密码是否为root/root
-- [ ] Java 21是否已安装
-- [ ] Maven是否已安装
+- [x] MariaDB是否已安装并运行在localhost:3306
+- [x] 数据库用户名密码是否为root/root
+- [x] Java 21是否已安装
+- [x] Maven是否已安装
+- [ ] 雷达图API是否正常工作（Phase 2 测试中）
 
 ## Visual/Browser Findings
 <!-- WHAT: 视觉内容发现 -->

@@ -1,11 +1,10 @@
 package com.radarchart.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
 @TableName("data_series")
 public class DataSeries {
 
@@ -17,4 +16,59 @@ public class DataSeries {
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getRadarChartId() {
+        return radarChartId;
+    }
+
+    public void setRadarChartId(Long radarChartId) {
+        this.radarChartId = radarChartId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataSeries that = (DataSeries) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "DataSeries{" +
+                "id=" + id +
+                ", radarChartId=" + radarChartId +
+                ", name='" + name + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

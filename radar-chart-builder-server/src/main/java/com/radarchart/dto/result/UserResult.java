@@ -1,9 +1,8 @@
-package com.radarchart.dto;
+package com.radarchart.dto.result;
 
-import com.radarchart.entity.User;
 import java.time.LocalDateTime;
 
-public class UserResponse {
+public class UserResult {
     private Long id;
     private String username;
     private String email;
@@ -50,19 +49,19 @@ public class UserResponse {
         this.createdAt = createdAt;
     }
 
-    public static UserResponse fromEntity(User user) {
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
-        response.setNickname(user.getNickname());
-        response.setCreatedAt(user.getCreatedAt());
-        return response;
+    public static UserResult fromEntity(com.radarchart.entity.User user) {
+        UserResult result = new UserResult();
+        result.setId(user.getId());
+        result.setUsername(user.getUsername());
+        result.setEmail(user.getEmail());
+        result.setNickname(user.getNickname());
+        result.setCreatedAt(user.getCreatedAt());
+        return result;
     }
 
     @Override
     public String toString() {
-        return "UserResponse{" +
+        return "UserResult{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +

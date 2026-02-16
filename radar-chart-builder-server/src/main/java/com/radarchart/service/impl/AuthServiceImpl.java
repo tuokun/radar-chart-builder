@@ -1,10 +1,10 @@
 package com.radarchart.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.radarchart.dto.AuthResponse;
-import com.radarchart.dto.LoginRequest;
-import com.radarchart.dto.RegisterRequest;
-import com.radarchart.dto.UserResponse;
+import com.radarchart.dto.param.LoginParam;
+import com.radarchart.dto.param.RegisterParam;
+import com.radarchart.dto.result.AuthResult;
+import com.radarchart.dto.result.UserResult;
 import com.radarchart.entity.User;
 import com.radarchart.exception.BadRequestException;
 import com.radarchart.exception.ResourceNotFoundException;
@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * 用户认证服务实现
+ */
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -32,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtil jwtUtil;
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResult register(RegisterParam request) {
         LOGGER.info("开始用户注册，用户名: {}, 邮箱: {}", request.getUsername(), request.getEmail());
 
         LambdaQueryWrapper<User> usernameWrapper = new LambdaQueryWrapper<>();
@@ -59,13 +62,13 @@ public class AuthServiceImpl implements AuthService {
         LOGGER.info("用户注册成功，用户ID: {}, 用户名: {}", user.getId(), user.getUsername());
 
         String token = jwtUtil.generateToken(user.getId(), user.getUsername());
-        UserResponse userResponse = UserResponse.fromEntity(user);
+        UserResult userResult = UserResult.fromEntity(user);
 
-        return new AuthResponse(token, userResponse);
+        return new AuthResult(token, userResult);
     }
 
     @Override
-    public AuthResponse login(LoginRequest request) {
+    public AuthResult login(LoginParam request) {
         LOGGER.info("开始用户登录，账号: {}", request.getAccount());
 
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -85,9 +88,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getUsername());
-        UserResponse userResponse = UserResponse.fromEntity(user);
+        UserResult userResult = UserResult.fromEntity(user);
 
         LOGGER.info("用户登录成功，用户ID: {}, 用户名: {}", user.getId(), user.getUsername());
-        return new AuthResponse(token, userResponse);
+        return new AuthResult(token, userResult);
     }
 }
