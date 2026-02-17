@@ -1,3 +1,7 @@
+-- ============================================
+-- 雷达图生成器项目 - 数据库初始化脚本
+-- ============================================
+
 -- 创建数据库
 CREATE DATABASE IF NOT EXISTS radar_chart_builder
   DEFAULT CHARACTER SET utf8mb4
@@ -5,7 +9,9 @@ CREATE DATABASE IF NOT EXISTS radar_chart_builder
 
 USE radar_chart_builder;
 
--- 创建users表
+-- ============================================
+-- 用户表
+-- ============================================
 CREATE TABLE IF NOT EXISTS users (
   id BIGINT PRIMARY KEY COMMENT '用户ID',
   username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
@@ -18,3 +24,59 @@ CREATE TABLE IF NOT EXISTS users (
   INDEX idx_username (username),
   INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
+-- ============================================
+-- 雷达图相关表
+-- ============================================
+
+-- 雷达图表
+CREATE TABLE IF NOT EXISTS radar_chart (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='雷达图表';
+
+-- 维度表
+CREATE TABLE IF NOT EXISTS dimension (
+    id BIGINT PRIMARY KEY,
+    radar_chart_id BIGINT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    min_value DOUBLE NOT NULL DEFAULT 0,
+    max_value DOUBLE NOT NULL DEFAULT 100,
+    order_index INT NOT NULL,
+    INDEX idx_radar_chart_id (radar_chart_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='维度表';
+
+-- 数据系列表
+CREATE TABLE IF NOT EXISTS data_series (
+    id BIGINT PRIMARY KEY,
+    radar_chart_id BIGINT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_radar_chart_id (radar_chart_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据系列表';
+
+-- 系列数据表
+CREATE TABLE IF NOT EXISTS series_data (
+    id BIGINT PRIMARY KEY,
+    series_id BIGINT NOT NULL,
+    dimension_id BIGINT NOT NULL,
+    value DOUBLE NOT NULL,
+    INDEX idx_series_id (series_id),
+    INDEX idx_dimension_id (dimension_id),
+    UNIQUE KEY uk_series_dimension (series_id, dimension_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系列数据表';
+
+-- ============================================
+-- 初始化完成
+-- ============================================
+-- 数据库结构创建完成，包含以下表：
+-- 1. users - 用户表
+-- 2. radar_chart - 雷达图表
+-- 3. dimension - 维度表
+-- 4. data_series - 数据系列表
+-- 5. series_data - 系列数据表
