@@ -606,16 +606,16 @@ Authorization: Bearer <token>
 
 ---
 
-## 数据库迁移说明
+## 数据库初始化说明
 
-在测试 API 之前，需要先执行数据库迁移：
+在测试 API 之前，需要先初始化数据库：
 
 ```bash
 # 方式1：使用 mysql 客户端
-mysql -h 192.168.1.109 -u root -p radar_chart_builder < radar-chart-builder-server/src/main/resources/db/migration/V2__radar_chart_tables.sql
+mysql -h 192.168.1.109 -u root -p < radar-chart-builder-server/src/main/resources/sql/schema.sql
 
 # 方式2：使用 MariaDB 客户端
-mariadb -h 192.168.1.109 -u root -p radar_chart_builder < radar-chart-builder-server/src/main/resources/db/migration/V2__radar_chart_tables.sql
+mariadb -h 192.168.1.109 -u root -p < radar-chart-builder-server/src/main/resources/sql/schema.sql
 
 # 方式3：在数据库客户端工具中执行 SQL 文件内容
 ```
