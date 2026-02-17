@@ -6,7 +6,6 @@ import com.radarchart.service.RadarChartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +19,11 @@ import java.util.List;
 @RequestMapping("/api/radar-charts")
 public class RadarChartController {
 
-    @Autowired
-    private RadarChartService radarChartService;
+    private final RadarChartService radarChartService;
+
+    public RadarChartController(RadarChartService radarChartService) {
+        this.radarChartService = radarChartService;
+    }
 
     @Operation(summary = "创建雷达图")
     @PostMapping
