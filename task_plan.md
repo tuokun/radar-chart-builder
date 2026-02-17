@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 2: 雷达图核心功能开发（进行中）
+Phase 4: 前端开发（准备开始）
 
 ## Phases
 
@@ -43,19 +43,20 @@ Phase 2: 雷达图核心功能开发（进行中）
 - [x] Task 9: 测试迁移是否成功
 - **Status:** complete
 
-### Phase 2: 雷达图核心功能开发（进行中）
+### Phase 2: 雷达图核心功能开发（已完成）
 <!-- WHAT: 实现雷达图相关的实体、服务和API -->
 <!-- WHY: 这是项目核心功能 -->
 - [x] 创建雷达图实体（RadarChart、Dimension、DataSeries、SeriesData）
 - [x] 创建Mapper接口
 - [x] 创建Param和Result DTO
 - [x] 创建Service接口和骨架实现
-- [ ] 实现雷达图CRUD Service方法
-- [ ] 创建雷达图Controller
-- [ ] 执行数据库迁移
-- [ ] 测试雷达图功能
+- [x] 实现雷达图CRUD Service方法
+- [x] 创建雷达图Controller
+- [x] 执行数据库迁移
+- [x] 测试雷达图功能（所有接口测试通过）
+- [x] 修复时间字段自动填充问题（MyMetaObjectHandler字段名统一为createTime/updateTime）
 - **实施计划文档：** docs/plans/2026-02-16-雷达图核心功能实施计划.md
-- **Status:** in_progress
+- **Status:** complete
 
 ### Phase 3: 模板功能开发（待定）
 <!-- WHAT: 实现模板分享和社区功能 -->

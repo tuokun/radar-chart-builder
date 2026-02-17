@@ -124,6 +124,16 @@
   - 数据库迁移SQL已准备好（需手动执行或配置Flyway）
   - 更新API测试文档：修正端口配置为8081，添加数据库迁移说明
 
+**2026-02-17 后端API测试完成：**
+  - 所有后端接口已测试通过
+  - 测试覆盖：创建雷达图、获取列表、获取详情、更新、删除
+  - 数据系列接口：添加系列、获取列表、更新名称、删除系列、更新数据值
+  - 图表导出接口：ECharts格式数据导出
+  - 发现问题记录：
+    1. JWT请求头需要使用 `Authorization: Bearer <token>` 格式
+    2. 时间字段自动填充问题：MyMetaObjectHandler字段名（createdAt/updatedAt）与实体类（createTime/updateTime）不匹配
+  - 问题解决：字段命名问题已修复，时间字段现在可以正常自动填充
+
 **Files created/modified:**
   - `docs/plans/2026-02-16-雷达图核心功能设计.md` (created)
   - `docs/plans/2026-02-16-雷达图核心功能实施计划.md` (created)
@@ -162,7 +172,9 @@
 
 | Test | Input | Expected | Actual | Status |
 |------|-------|----------|--------|--------|
-| 后端API测试 | 迁移到MyBatis-Plus后 | API端点正常工作 | 待迁移后测试 | ⏳ |
+| 后端API测试 | 所有接口端点 | API正常工作，返回预期数据 | 测试通过 | ✅ |
+| JWT认证测试 | 登录获取token + 后续请求 | Bearer格式token认证成功 | 测试通过 | ✅ |
+| 时间字段自动填充 | 创建/更新雷达图 | createTime/updateTime自动填充 | 发现字段名不匹配问题 | ⚠️ |
 
 ## Error Log
 <!-- WHAT: 错误日志 -->
@@ -173,6 +185,8 @@
 | 2026-02-13 08:05 | MariaDB 11.4.7下载失败（artifactory不可用） | 1 | 改用MariaDB 3.4.1版本 |
 | 2026-02-13 08:05 | Maven本地仓库路径错误（/User vs /Users） | 1 | 使用-Dmaven.repo.local指定正确路径 |
 | 2026-02-13 09:00 | LSP报错：MyBatis-Plus注解和Mapper导入无法解析 | 1 | 这是IDE的LSP错误，代码正确 |
+| 2026-02-17 | JWT请求头403错误 | 1 | 请求头缺少"Bearer "前缀，修改客户端请求头格式即可 |
+| 2026-02-17 | 时间字段自动填充失败 | 1 | MyMetaObjectHandler字段名（createdAt/updatedAt）与实体类（createTime/updateTime）不匹配，需修改MyMetaObjectHandler.java |
 
 ## 5-Question Reboot Check
 <!-- WHAT: 五问重启测试 -->
