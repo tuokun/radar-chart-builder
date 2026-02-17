@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 4: 前端开发（准备开始）
+Phase 4: 前端开发（已完成）
 
 ## Phases
 
@@ -67,18 +67,19 @@ Phase 4: 前端开发（准备开始）
 - [ ] 实现模板使用功能
 - **Status:** pending
 
-### Phase 4: 前端开发
+### Phase 4: 前端开发（已完成）
 <!-- WHAT: 使用Vue3 + Element Plus + ECharts开发前端 -->
 <!-- WHY: 用户需要Web界面来使用功能 -->
-- [ ] 初始化Vue3项目
-- [ ] 配置Element Plus
-- [ ] 配置ECharts
-- [ ] 实现用户注册/登录页面
-- [ ] 实现雷达图创建页面
-- [ ] 实现雷达图列表页面
-- [ ] 集成后端API
-- [ ] 测试前端功能
-- **Status:** pending
+- [x] 初始化Vue3项目
+- [x] 配置Element Plus
+- [x] 配置ECharts
+- [x] 实现用户注册/登录页面
+- [x] 实现雷达图创建页面
+- [x] 实现雷达图列表页面
+- [x] 集成后端API
+- [x] 测试前端功能
+- [x] 修复API对接问题（端口、响应格式、字段名）
+- **Status:** complete
 
 ### Phase 5: 微信小程序开发（待定）
 <!-- WHAT: 开发微信小程序版本 -->
@@ -132,7 +133,7 @@ Phase 4: 前端开发（准备开始）
 <!-- WHY: 指导技术选型和架构决策 -->
 1. ~~后端API文档是否需要在线测试功能？~~ ✅ 已解决（使用Knife4j）
 2. ~~雷达图数据如何存储？~~ ✅ 已解决（四表关联结构）
-3. 前端是否需要状态管理？（Pinia，如果需要复杂状态）
+3. ~~前端是否需要状态管理？~~ ✅ 已解决（使用Pinia）
 4. 是否需要部署CI/CD？（后续考虑）
 5. ~~雷达图是否支持多数据系列？~~ ✅ 已解决（支持多系列对比）
 
@@ -146,19 +147,29 @@ Phase 4: 前端开发（准备开始）
 | MyBatis-Plus | SQL可控性强，适合复杂查询，中文资料丰富，性能优化方便 |
 | JWT认证 | 无状态，适合前后端分离架构 |
 | Vue3 + Element Plus | 学习曲线平缓，文档完善，国内生态好 |
+| Pinia | Vue3 官方推荐状态管理，TypeScript 支持好，API 简洁 |
 | ECharts | 原生支持雷达图，功能强大，中文文档丰富 |
 | Knife4j | Swagger增强版，界面美观，支持在线测试 |
 | 四表关联结构 | 支持多数据系列，数据规范化，便于扩展和查询 |
 | Param/Result命名 | 语义清晰，区分请求和响应 |
 | 雪花ID（ASSIGN_ID） | 分布式友好，避免ID冲突 |
 | 不使用Lombok | 项目禁用Lombok，手动编写getter/setter/constructor |
+| API响应格式 | 后端直接返回数据，无包装（code/message/data） |
 
 ## Errors Encountered
 <!-- WHAT: 开发过程中遇到的错误及解决方案 -->
 <!-- WHY: 避免重复错误，积累经验 -->
 | Error | Attempt | Resolution |
 |-------|---------|------------|
-| | 1 | |
+| 前端 API 端口配置错误 (8080) | 1 | 修改为 8081 |
+| 前端 API 响应格式不匹配 | 1 | 移除 ApiResponse 包装 |
+| 前端字段名不一致 | 1 | createdAt/updatedAt → createTime/updateTime |
+| 前端分页格式不匹配 | 1 | 移除分页，直接处理数组 |
+| 前端注册跳转错误 | 1 | 注册成功后跳转到登录页 |
+| 前端删除缺少确认 | 1 | 添加二次确认对话框 |
+| 前端验证不足 | 1 | 添加用户名和密码长度验证 |
+| 前端图标未导入 | 1 | 导入 Plus 和 Delete 图标 |
+| 前端重复 initAuth | 1 | 移除 App.vue 中的调用 |
 
 ## Notes
 <!-- REMINDERS: -->
@@ -166,11 +177,11 @@ Phase 4: 前端开发（准备开始）
 <!-- - Re-read this plan before major decisions (attention manipulation) -->
 <!-- - Log ALL errors - they help avoid repetition -->
 - Phase 1 已完成：用户认证功能 + MyBatis-Plus 迁移
-- Phase 2 进行中：雷达图核心功能开发
+- Phase 2 已完成：雷达图核心功能开发
+- Phase 4 已完成：前端开发（Vue3 + Element Plus + ECharts）
 - 设计文档：docs/plans/2026-02-16-雷达图核心功能设计.md
 - 实施计划：docs/plans/2026-02-16-雷达图核心功能实施计划.md
 - API测试文档：docs/接口文档/雷达图API测试指南.md
-- 前端开发需要等后端API基本完成后再开始
 - 模板功能是待定功能，MVP阶段暂不实现
 
 ## 关键决策记录
@@ -179,3 +190,6 @@ Phase 4: 前端开发（准备开始）
 - **维度范围**：支持自定义最小值/最大值（非0起点）
 - **DTO命名**：使用 Param/Result 后缀
 - **字段命名**：使用 createTime/updateTime（非 createdAt/updatedAt）
+- **前端状态管理**：使用 Pinia（Vue3 官方推荐）
+- **API响应格式**：后端直接返回数据，无包装（简化前端处理）
+- **前端分页**：暂不支持分页（后端返回数组，前端全部显示）

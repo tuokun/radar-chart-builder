@@ -157,9 +157,68 @@
 - Files created/modified:
 
 ### Phase 4: 前端开发
-- **Status:** pending
-- Actions taken:
-- Files created/modified:
+- **Status:** completed
+- **Started:** 2026-02-17
+- **Updated:** 2026-02-17
+
+**Actions taken:**
+  - 初始化 Vue 3 + TypeScript + Vite 前端项目
+  - 配置 Element Plus UI 组件库（自动导入）
+  - 配置 Axios HTTP 客户端和请求拦截器
+  - 配置 Pinia 状态管理
+  - 配置 Vue Router（含认证路由守卫）
+  - 创建 TypeScript 类型定义（API 响应、数据模型、认证）
+  - 实现 API 请求封装（auth、radarChart）
+  - 实现 Pinia Store（auth、radarChart）
+  - 实现用户认证页面（登录/注册）
+  - 实现雷达图列表页面（卡片展示、搜索、删除确认）
+  - 实现雷达图编辑页面（左侧表单、右侧实时预览）
+  - 实现雷达图预览组件（基于 vue-echarts）
+  - 实现维度编辑器组件
+  - 实现数据系列编辑器组件
+  - 创建环境变量配置文件（.env.development、.env.production）
+
+**2026-02-17 前端项目问题修复：**
+  - 修复 API 端口配置（8080 → 8081）
+  - 修复 API 响应格式不匹配（后端返回数据直接，无包装）
+  - 修复字段名不一致（createdAt/updatedAt → createTime/updateTime）
+  - 修复 fetchList 期望分页但后端返回数组的问题
+  - 移除分页功能，简化为全部显示
+  - 注册成功后跳转到登录页
+  - 删除操作添加二次确认
+  - 登录表单添加长度验证
+  - 导入缺失的图标组件
+  - 移除路由守卫中重复的 initAuth 调用
+
+**Files created/modified:**
+  - `radar-chart-builder-web/package.json` (created - 依赖配置)
+  - `radar-chart-builder-web/vite.config.ts` (created - Vite 配置、代理、Element Plus 自动导入)
+  - `radar-chart-builder-web/.env.development` (created - 开发环境变量)
+  - `radar-chart-builder-web/.env.production` (created - 生产环境变量)
+  - `radar-chart-builder-web/src/types/api.ts` (created)
+  - `radar-chart-builder-web/src/types/models.ts` (created)
+  - `radar-chart-builder-web/src/types/auth.ts` (created)
+  - `radar-chart-builder-web/src/utils/request.ts` (created)
+  - `radar-chart-builder-web/src/api/index.ts` (created)
+  - `radar-chart-builder-web/src/api/auth.ts` (created)
+  - `radar-chart-builder-web/src/api/radarChart.ts` (created)
+  - `radar-chart-builder-web/src/stores/auth.ts` (created)
+  - `radar-chart-builder-web/src/stores/radarChart.ts` (created)
+  - `radar-chart-builder-web/src/router/index.ts` (created)
+  - `radar-chart-builder-web/src/main.ts` (created)
+  - `radar-chart-builder-web/src/App.vue` (created)
+  - `radar-chart-builder-web/src/views/auth/LoginView.vue` (created)
+  - `radar-chart-builder-web/src/views/auth/RegisterView.vue` (created)
+  - `radar-chart-builder-web/src/views/radar/RadarListView.vue` (created)
+  - `radar-chart-builder-web/src/views/radar/RadarEditView.vue` (created)
+  - `radar-chart-builder-web/src/views/HomeView.vue` (created)
+  - `radar-chart-builder-web/src/components/RadarChartPreview.vue` (created)
+  - `radar-chart-builder-web/src/components/DimensionEditor.vue` (created)
+  - `radar-chart-builder-web/src/components/SeriesEditor.vue` (created)
+  - `radar-chart-builder-web/src/composables/useAuth.ts` (created)
+  - `radar-chart-builder-web/src/composables/useChart.ts` (created)
+  - `radar-chart-builder-web/README.md` (created)
+  - `progress.md` (modified - 添加 Phase 4 完成记录)
 
 ### Phase 5: 微信小程序开发（待定）
 - **Status:** pending
@@ -173,6 +232,11 @@
 | Test | Input | Expected | Actual | Status |
 |------|-------|----------|--------|--------|
 | 后端API测试 | 所有接口端点 | API正常工作，返回预期数据 | 测试通过 | ✅ |
+| 前端类型检查 | npm run type-check | TypeScript 编译无错误 | 编译通过 | ✅ |
+| 前端代码检查 | npm run lint | 无 linting 错误 | 检查通过 | ✅ |
+| 前端依赖安装 | npm install | 所有依赖正常安装 | 安装成功 | ✅ |
+| Element Plus集成 | 组件自动导入 | UI组件正常渲染 | 集成成功 | ✅ |
+| ECharts集成 | vue-echarts 雷达图 | 图表正常渲染显示 | 集成成功 | ✅ |
 | JWT认证测试 | 登录获取token + 后续请求 | Bearer格式token认证成功 | 测试通过 | ✅ |
 | 时间字段自动填充 | 创建/更新雷达图 | createTime/updateTime自动填充 | 发现字段名不匹配问题 | ⚠️ |
 
@@ -186,7 +250,16 @@
 | 2026-02-13 08:05 | Maven本地仓库路径错误（/User vs /Users） | 1 | 使用-Dmaven.repo.local指定正确路径 |
 | 2026-02-13 09:00 | LSP报错：MyBatis-Plus注解和Mapper导入无法解析 | 1 | 这是IDE的LSP错误，代码正确 |
 | 2026-02-17 | JWT请求头403错误 | 1 | 请求头缺少"Bearer "前缀，修改客户端请求头格式即可 |
-| 2026-02-17 | 时间字段自动填充失败 | 1 | MyMetaObjectHandler字段名（createdAt/updatedAt）与实体类（createTime/updateTime）不匹配，需修改MyMetaObjectHandler.java |
+| 2026-02-17 | 时间字段自动填充失败 | 1 | MyMetaObjectHandler字段名（createdAt/updatedAt）与实体类（createTime/updateTime）不匹配，修改MyMetaObjectHandler.java |
+| 2026-02-17 | 前端 API 端口配置错误 | 1 | vite.config.ts 端口从 8080 改为 8081 |
+| 2026-02-17 | 前端 API 响应格式不匹配 | 1 | 移除 ApiResponse 包装，直接返回数据 |
+| 2026-02-17 | 前端 User 类型字段名不一致 | 1 | createdAt/updatedAt 改为 createTime/updateTime |
+| 2026-02-17 | 前端 fetchList 期望分页但后端返回数组 | 1 | 移除分页相关代码，直接处理数组响应 |
+| 2026-02-17 | 前端注册成功跳转错误 | 1 | 注册成功后跳转到登录页而非首页 |
+| 2026-02-17 | 前端删除操作缺少确认 | 1 | 添加 ElMessageBox.confirm 二次确认 |
+| 2026-02-17 | 前端登录表单缺少验证 | 1 | 添加用户名和密码长度验证 |
+| 2026-02-17 | 前端图标未导入 | 1 | RadarEditView.vue 导入 Plus 和 Delete 图标 |
+| 2026-02-17 | 前端路由守卫重复 initAuth | 1 | 移除 App.vue 中的 initAuth 调用 |
 
 ## 5-Question Reboot Check
 <!-- WHAT: 五问重启测试 -->
@@ -194,11 +267,11 @@
 
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 1 - 后端基础架构搭建（JPA迁移到MyBatis-Plus前） |
-| Where am I going? | 执行JPA到MyBatis-Plus的迁移，然后继续Phase 2雷达图核心功能 |
+| Where am I? | Phase 4 - 前端开发已完成 |
+| Where am I going? | 继续下一阶段开发（Phase 3: 模板功能）或进行项目联调测试 |
 | What's the goal? | 构建雷达图生成器，后端SpringBoot + MyBatis-Plus，前端Vue3 + ECharts |
-| What have I learned? | 技术选型已确定：MyBatis-Plus、Vue3、Element Plus、ECharts（见findings.md） |
-| What have I done? | 创建项目文档、实现计划、技术选型、迁移计划（见progress.md） |
+| What have I learned? | 前后端技术栈确定，API 对接完成，类型系统已统一 |
+| What have I done? | 完成后端基础架构、雷达图核心功能、前端项目初始化（见progress.md、task_plan.md） |
 
 ---
 <!--
