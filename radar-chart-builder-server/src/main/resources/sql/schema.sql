@@ -31,41 +31,41 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- 雷达图表
 CREATE TABLE IF NOT EXISTS radar_chart (
-    id BIGINT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    description VARCHAR(500),
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id BIGINT PRIMARY KEY COMMENT '雷达图ID',
+    user_id BIGINT NOT NULL COMMENT '所属用户ID',
+    title VARCHAR(100) NOT NULL COMMENT '标题',
+    description VARCHAR(500) COMMENT '描述',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='雷达图表';
 
 -- 维度表
 CREATE TABLE IF NOT EXISTS dimension (
-    id BIGINT PRIMARY KEY,
-    radar_chart_id BIGINT NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    min_value DOUBLE NOT NULL DEFAULT 0,
-    max_value DOUBLE NOT NULL DEFAULT 100,
-    order_index INT NOT NULL,
+    id BIGINT PRIMARY KEY COMMENT '维度ID',
+    radar_chart_id BIGINT NOT NULL COMMENT '所属雷达图ID',
+    name VARCHAR(50) NOT NULL COMMENT '维度名称',
+    min_value DOUBLE NOT NULL DEFAULT 0 COMMENT '最小值',
+    max_value DOUBLE NOT NULL DEFAULT 100 COMMENT '最大值',
+    order_index INT NOT NULL COMMENT '排序索引',
     INDEX idx_radar_chart_id (radar_chart_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='维度表';
 
 -- 数据系列表
 CREATE TABLE IF NOT EXISTS data_series (
-    id BIGINT PRIMARY KEY,
-    radar_chart_id BIGINT NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    id BIGINT PRIMARY KEY COMMENT '系列ID',
+    radar_chart_id BIGINT NOT NULL COMMENT '所属雷达图ID',
+    name VARCHAR(50) NOT NULL COMMENT '系列名称',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     INDEX idx_radar_chart_id (radar_chart_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据系列表';
 
 -- 系列数据表
 CREATE TABLE IF NOT EXISTS series_data (
-    id BIGINT PRIMARY KEY,
-    series_id BIGINT NOT NULL,
-    dimension_id BIGINT NOT NULL,
-    value DOUBLE NOT NULL,
+    id BIGINT PRIMARY KEY COMMENT '数据ID',
+    series_id BIGINT NOT NULL COMMENT '所属系列ID',
+    dimension_id BIGINT NOT NULL COMMENT '所属维度ID',
+    value DOUBLE NOT NULL COMMENT '数值',
     INDEX idx_series_id (series_id),
     INDEX idx_dimension_id (dimension_id),
     UNIQUE KEY uk_series_dimension (series_id, dimension_id)
