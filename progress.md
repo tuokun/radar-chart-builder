@@ -81,9 +81,9 @@
 - `radar-chart-builder-server/src/main/java/com/radarchart/controller/AuthController.java` (created)
 
 ### Phase 2: 雷达图核心功能开发
-- **Status:** in_progress
+- **Status:** completed
 - **Started:** 2026-02-16
-- **Updated:** 2026-02-16
+- **Updated:** 2026-02-17
 
 **Actions taken:**
   - 完成需求分析和设计决策（多数据系列、四表关联结构、维度范围自定义）
@@ -103,6 +103,26 @@
   - 手动编写所有实体类、DTO类的getter/setter/constructor/toString方法
   - 更新Service实现类，手动添加构造函数
   - 更新文档，记录"不使用Lombok"技术决策
+
+**2026-02-17 Service层实现完成（Task 7-17）：**
+  - 实现createRadarChart：创建雷达图及维度配置
+  - 实现getUserRadarCharts：获取用户雷达图列表
+  - 实现getRadarChartDetail：获取雷达图详情
+  - 实现updateRadarChart：更新雷达图基本信息
+  - 实现deleteRadarChart：删除雷达图（级联删除）
+  - 实现addDataSeries：添加数据系列（含名称查重、值范围校验）
+  - 实现getDataSeries：获取数据系列列表
+  - 实现updateSeriesName：更新系列名称
+  - 实现deleteSeries：删除数据系列
+  - 实现updateSeriesData：更新系列数据值
+  - 实现getChartData：获取ECharts格式数据
+  - 辅助方法：buildRadarChartResult、buildSeriesResult、getAndValidateRadarChart
+
+**2026-02-17 Controller和文档完善（Task 18-22）：**
+  - RadarChartController已存在，优化依赖注入方式改为构造函数注入
+  - SecurityConfig验证：雷达图API路径已正确配置为需要认证
+  - 数据库迁移SQL已准备好（需手动执行或配置Flyway）
+  - 更新API测试文档：修正端口配置为8081，添加数据库迁移说明
 
 **Files created/modified:**
   - `docs/plans/2026-02-16-雷达图核心功能设计.md` (created)
