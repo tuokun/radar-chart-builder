@@ -299,3 +299,333 @@
 - **Files created/modified:**
   - `task_plan.md` (modified - 添加Phase 6)
   - `findings.md` (modified - 添加JWT优化方案研究)
+
+## Session: 2026-02-23
+
+### 前端测试准备
+<!-- WHAT: 准备前端功能测试 -->
+<!-- WHY: 后端已完成，前端已完成，需要联调测试验证功能 -->
+- **Status:** in_progress
+- **Started:** 2026-02-23 13:15
+- **Updated:** 2026-02-23 13:29
+
+**Actions taken:**
+  - 用户确认后端已通过 IDEA 启动，Apifox 已测试所有接口，后端功能正常
+  - 用户表示之前只会后端，现在想测试前端
+  - 生成详尽的前端测试说明文档（docs/前端测试说明.md）
+  - 测试文档包含10个章节，从环境准备到整体体验测试
+  - 每个测试步骤都明确说明"我做了什么"、"你能看到什么现象"、"你要如何进行下去"
+  - 附带测试检查清单和问题记录模板
+  - 计划启动前端开发服务器开始测试
+  - 用户拒绝授权执行 npm run dev 命令
+  - 用户计划下午继续测试
+
+**Files created/modified:**
+  - `docs/前端测试说明.md` (created - 完整测试流程文档)
+
+**下一步计划:**
+  - 用户手动启动前端开发服务器（npm run dev）
+  - 按照测试说明文档逐章测试前端功能
+  - 记录测试结果和发现的问题
+
+## Session: 2026-02-24
+
+### 后端测试接口优化
+<!-- WHAT: 优化后端测试接口，统一字段命名 -->
+<!-- WHY: 为前端联调测试做准备，确保后端稳定 -->
+- **Status:** completed
+- **Started:** 2026-02-24 23:00
+- **Updated:** 2026-02-24 23:45
+
+**Actions taken:**
+  - **TestController 优化：**
+    - 合并接口，删除 `/api/protected`，保留 `/api/health` 和 `/api/test/services`
+    - 数据库状态检查改用原生 JDBC（DataSource），避免 MyBatis 依赖，性能最优
+    - 添加 JVM 运行时信息检查（内存使用率、处理器数、运行时间）
+    - 移除 Redis、Kafka 等未配置服务的占位内容
+    - 使用构造器注入替代 `@Autowired`
+    - 使用 `Map.of()` 简化代码
+
+  - **SecurityConfig 优化：**
+    - 构造器注入替代 `@Autowired` 字段注入
+    - `Arrays.asList` 改为 `List.of()`
+    - 合并 `requestMatchers` 为一行
+    - 将 `/api/health` 和 `/api/test/**` 加入白名单
+
+  - **字段命名统一：**
+    - `users` 表字段：`created_at/updated_at` → `create_time/update_time`
+    - `User.java` 实体：`createdAt/updatedAt` → `createTime/updateTime`
+    - `UserResult.java` DTO：`createdAt` → `createTime`
+    - 前端 `models.ts` 注释更新为与后端一致
+
+  - **代码质量优化：**
+    - 移除 Eclipse 相关文件（.classpath、.project、.settings/）
+    - 回滚过度优化（`d` → `duration`，`>> 20` → `/ 1024 / 1024`）
+    - 移除 `measureLatency()` 方法，直接内联延迟计算代码
+
+**Files created/modified:**
+  - `radar-chart-builder-server/src/main/java/com/radarchart/controller/TestController.java` (modified)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/config/SecurityConfig.java` (modified)
+  - `radar-chart-builder-server/src/main/resources/sql/schema.sql` (modified)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/entity/User.java` (modified)
+  - `radar-chart-builder-server/src/main/java/com/radarchart/dto/result/UserResult.java` (modified)
+  - `radar-chart-builder-web/src/types/models.ts` (modified)
+
+**后端测试接口说明：**
+| 接口 | 说明 |
+|------|------|
+| `GET /api/health` | 服务健康检查 |
+| `GET /api/test/services` | 依赖服务状态检查（数据库、JVM） |
+
+**下一步计划:**
+  - 明天开始前端联调测试
+  - 按照前端测试说明文档进行功能验证
+  - 记录测试结果和问题
+
+## Session: 2026-02-25
+
+### 前端联调测试 - 第一轮
+<!-- WHAT: 前后端联调测试，发现并修复多个问题 -->
+<!-- WHY: 验证前后端集成，修复测试中发现的bug -->
+- **Status:** in_progress
+- **Started:** 2026-02-25 09:00
+- **Updated:** 2026-02-25 12:30
+
+**Actions taken:**
+
+**1. 页面布局问题修复：**
+- 发现页面显示为手机端横短竖长比例（9:16）
+- 根本原因：`main.css` 中的 Vite 默认样式限制了宽度并使用 grid 布局
+- 修复：移除 `max-width: 1280px` 和 grid 相关样式，改为 `width: 100%`
+- 文件：`radar-chart-builder-web/src/main.css`
+
+**2. 登录接口字段适配：**
+- 前端发送 `username` 字段，后端期望 `account` 字段
+- 修复：前端 `LoginRequest` 类型和 `LoginView.vue` 改用 `account`
+- 用户偏好：前端适应后端命名
+
+**3. 数据库字段统一：**
+- 数据库仍使用 `created_at/updated_at`，代码期望 `create_time/update_time`
+- 用户手动执行 ALTER TABLE 修改字段名
+
+**4. Vue Router 切换错误修复：**
+- 错误：`Cannot destructure property 'type' of 'vnode' as it is null`
+- 原因：vue-echarts 组件生命周期问题
+- 修复：
+  - `RadarChartPreview.vue` 添加条件渲染 `v-if="isReady"`
+  - 添加 `chartKey` 强制组件重新创建
+  - 路由导航添加 `nextTick()` 和全局错误处理
+
+**5. 添加 minValue 支持：**
+- 发现维度只有 `maxValue`，后端支持 `minValue`
+- 更新前端 `Dimension` 类型添加 `minValue: number`
+- 更新表单显示最小值/最大值输入框
+- 更新 ECharts 配置使用 `min` 值
+
+**6. 页面结构重构：**
+- 用户需求：分离雷达图表单和数据系列编辑为两个独立页面
+- 新增 `MainLayout.vue` 侧边栏导航（雷达图、数据系列两个菜单）
+- 重命名 `RadarEditView.vue` → `RadarFormView.vue`（仅表单）
+- 新建 `SeriesDetailView.vue`（图表预览 + 数据系列编辑）
+- 更新路由使用嵌套结构
+
+**7. 字段名统一（displayOrder vs orderIndex）：**
+- 发现前端使用 `displayOrder`，后端使用 `orderIndex`
+- 更新前端类型定义：
+  - `Dimension.orderIndex` 匹配后端
+  - `DataSeries.displayOrder` 保留为前端-only 字段
+- 更新 `CreateDimensionDto` 使用 `orderIndex`
+
+**8. ID 精度丢失问题修复（重大）：**
+- **问题：** 数据库 ID `2026508447972470786` 在前端变成 `2026508447972470800`
+- **原因：** JavaScript `Number.MAX_SAFE_INTEGER = 9007199254740991`，雪花算法生成的19位ID超出安全范围
+- **修复方案：** 后端序列化时将 `Long` 转为字符串
+- **后端修改：** 新建 `JacksonConfig.java`
+  ```java
+  mapper.registerModule(new SimpleModule()
+      .addSerializer(Long.class, ToStringSerializer.instance)
+      .addSerializer(Long.TYPE, ToStringSerializer.instance));
+  ```
+- **前端修改：** 所有 ID 类型从 `number` 改为 `string`
+  - `types/models.ts`: RadarChart.id, Dimension.id, DataSeries.id, SeriesData.id
+  - `api/radarChart.ts`: API 函数参数类型
+  - `stores/radarChart.ts`: Store 函数参数类型
+  - 所有 Vue 组件中的 ID 处理
+
+**9. 路由判断逻辑修复：**
+- 问题：访问 `/radar/new` 时 `isEditMode` 判断错误，导致调用 `fetchById(NaN)`
+- 原因：`route.params.id` 是 `undefined`，`undefined !== 'new'` 为 `true`
+- 修复：改为检查 `route.name === 'radar-edit'`
+
+**10. 创建雷达图页面功能完善（进行中）：**
+- 添加实时预览功能（使用各维度平均值作为默认数据）
+- 修复维度输入框对齐问题（添加空标签占位）
+- 添加预览卡片到表单页面
+
+**Files created/modified:**
+- `radar-chart-builder-server/src/main/java/com/radarchart/config/JacksonConfig.java` (created - Long序列化为字符串)
+- `radar-chart-builder-web/src/main.css` (modified - 移除宽度限制)
+- `radar-chart-builder-web/src/types/auth.ts` (modified - username → account)
+- `radar-chart-builder-web/src/types/models.ts` (modified - 添加minValue，ID改为string)
+- `radar-chart-builder-web/src/components/MainLayout.vue` (created - 侧边栏导航)
+- `radar-chart-builder-web/src/views/radar/RadarFormView.vue` (renamed from RadarEditView, modified)
+- `radar-chart-builder-web/src/views/series/SeriesDetailView.vue` (created - 数据系列编辑页)
+- `radar-chart-builder-web/src/views/radar/RadarListView.vue` (modified - 移除header，更新导航)
+- `radar-chart-builder-web/src/components/RadarChartPreview.vue` (modified - 条件渲染、minValue支持)
+- `radar-chart-builder-web/src/router/index.ts` (modified - 嵌套路由)
+- `radar-chart-builder-web/src/api/radarChart.ts` (modified - 参数类型改为string)
+- `radar-chart-builder-web/src/stores/radarChart.ts` (modified - 参数类型改为string)
+- `radar-chart-builder-web/src/utils/request.ts` (modified - 添加调试日志)
+
+**当前待解决问题（需重启后端服务测试）：**
+
+| 问题 | 描述 | 状态 |
+|------|------|------|
+| 实时预览无图像 | 创建雷达图时预览区域没有显示图表 | 需硬刷新浏览器测试 |
+| 卡片三点直接跳转 | 点击卡片右上角三点直接跳转到详情页，未显示下拉菜单 | 需硬刷新浏览器测试 |
+| 搜索框Enter键 | 搜索框按Enter键没有触发列表刷新 | 需硬刷新浏览器测试 |
+
+**测试检查清单：**
+- [ ] 硬刷新浏览器（Cmd+Shift+R）
+- [ ] 测试创建雷达图实时预览
+- [ ] 测试卡片三点下拉菜单
+- [ ] 测试搜索框Enter键响应
+- [ ] 测试雷达图CRUD完整流程
+- [ ] 测试数据系列编辑功能
+
+**Error Log (本会话):**
+| Timestamp | Error | 修复 |
+|-----------|-------|------|
+| 2026-02-25 | GET /api/radar-charts/NaN (404) | isEditMode判断逻辑修复 |
+| 2026-02-25 | ID精度丢失导致404 | 添加JacksonConfig，前端ID改为string |
+| 2026-02-25 | 页面显示手机端比例 | main.css移除宽度限制 |
+| 2026-02-25 | 登录403错误 | username改为account |
+
+**下一步计划:**
+1. 重启后端服务（应用JacksonConfig）
+2. 硬刷新浏览器清除缓存
+3. 验证实时预览功能
+4. 验证卡片下拉菜单
+5. 验证搜索框功能
+6. 完整的前后端联调测试
+
+## Session: 2026-02-25 (下午)
+
+### 前端联调测试 - 第二轮
+<!-- WHAT: 继续前后端联调测试，优化功能和修复问题 -->
+<!-- WHY: 完善用户体验，解决测试中发现的问题 -->
+- **Status:** in_progress
+- **Started:** 2026-02-25 14:00
+- **Updated:** 2026-02-25 18:00
+
+**Actions taken:**
+
+**1. 实时预览功能修复：**
+- 问题：创建雷达图时预览区域空白
+- 原因：ECharts 无法获取 DOM 宽度和高度
+- 修复：
+  - 添加明确的宽度和最小宽度样式
+  - 确保所有父容器都有 100% 宽度
+
+**2. 创建雷达图不自动生成数据系列：**
+- 用户需求：先创建雷达图（只配置维度），后续再添加数据
+- 修复：`RadarFormView.vue` 创建时不自动生成 series 数据
+- 后端已支持创建时不带系列（`series` 字段可选）
+
+**3. 按钮文字优化：**
+- "添加系列" → "添加数据"
+- "数据系列" → "数据组"
+- "x个系列" → "x组数据"
+
+**4. 允许删除所有数据系列：**
+- 移除"至少需要1个数据系列"的限制
+- 无数据时显示"暂未添加数据组"提示
+
+**5. 数据系列保存功能修复：**
+- 问题：添加数据系列后保存不生效
+- 原因：`UpdateRadarChartParam` 没有 `series` 字段，`updateRadarChart` 方法没有处理系列
+- 修复：
+  - 扩展 `UpdateRadarChartParam` 添加 `series` 字段和内部类
+  - 修改 `updateRadarChart` 方法：删除所有现有系列，根据前端数据创建新系列
+
+**6. 列表页性能优化：**
+- 问题：列表接口返回所有维度和系列数据，响应慢
+- 修复：
+  - 后端 `getUserRadarCharts` 不再返回系列数据
+  - 前端在没有系列数据时显示简易预览（各维度平均值）
+
+**7. 删除图表内标题：**
+- 问题：图表标题在卡片上已有，ECharts 内的标题多余且遮挡数据
+- 修复：移除 `RadarChartPreview.vue` 中的 title 配置
+
+**8. 数据系列颜色保存功能：**
+- 问题：颜色修改后保存不生效
+- 原因：`DataSeries` 实体和数据库表没有 `color` 字段
+- 修复：
+  - `DataSeries.java` 添加 `color` 字段
+  - `schema.sql` 添加 `color` 列定义
+  - `updateRadarChart` 方法保存颜色信息
+  - `buildSeriesResult` 方法返回数据库中保存的颜色
+  - 数据库需执行：`ALTER TABLE data_series ADD COLUMN color VARCHAR(20) DEFAULT '#409eff' COMMENT '系列颜色';`
+
+**9. 搜索框功能优化：**
+- 用户需求：输入文字时不实时过滤，点击按钮或按 Enter 才搜索
+- 修复：
+  - `filteredCharts` 从 computed 改为 ref
+  - 添加 `handleSearch` 方法手动触发搜索
+  - 添加搜索按钮（输入框右侧放大镜图标）
+
+**10. 搜索框样式优化：**
+- 删除文字框内的放大镜图标（移除 prefix template）
+- 缩短搜索框宽度（200px → 280px）
+
+**11. 三点菜单图标优化：**
+- 问题：卡片右上角三点图标太小
+- 修复：
+  - 增加 padding 和 font-size
+  - 设置明确的宽高
+  - 使用 `display: inline-flex` 和居中对齐
+
+**12. 删除"数据系列"菜单：**
+- 问题："数据系列"是依附于具体雷达图的，不应该有独立的顶级菜单
+- 修复：删除 `MainLayout.vue` 中的"数据系列"菜单项
+- 用户通过点击雷达图卡片进入数据详情页
+
+**Files created/modified:**
+- `radar-chart-builder-web/src/components/MainLayout.vue` (modified - 删除"数据系列"菜单)
+- `radar-chart-builder-web/src/views/series/SeriesDetailView.vue` (modified - 文字修改、允许无系列)
+- `radar-chart-builder-web/src/views/radar/RadarListView.vue` (modified - 搜索功能、样式优化)
+- `radar-chart-builder-web/src/components/RadarChartPreview.vue` (modified - 删除标题、支持无系列预览)
+- `radar-chart-builder-server/src/main/java/com/radarchart/entity/DataSeries.java` (modified - 添加color字段)
+- `radar-chart-builder-server/src/main/java/com/radarchart/dto/param/UpdateRadarChartParam.java` (modified - 添加series字段)
+- `radar-chart-builder-server/src/main/resources/sql/schema.sql` (modified - 添加color列)
+
+**测试检查清单（雷达图菜单）：**
+- [x] 创建雷达图实时预览
+- [x] 创建雷达图不自动生成数据
+- [x] 添加数据组并保存
+- [x] 颜色保存生效
+- [x] 删除所有数据组
+- [x] 搜索框功能正常
+- [x] 三点菜单图标大小合适
+- [x] 列表页显示"x组数据"
+
+**待测试（数据组功能）：**
+- [ ] 编辑数据组数值
+- [ ] 修改数据组颜色
+- [ ] 删除数据组
+- [ ] 数据组数值滑块交互
+
+**Error Log (本会话):**
+| Timestamp | Error | 修复 |
+|-----------|-------|------|
+| 2026-02-25 | 实时预览空白 | 添加明确宽度和最小宽度 |
+| 2026-02-25 | 数据系列保存不生效 | 扩展UpdateRadarChartParam和updateRadarChart方法 |
+| 2026-02-25 | 颜色保存不生效 | DataSeries实体添加color字段，执行ALTER TABLE |
+| 2026-02-25 | 三点图标太小 | 增加padding和font-size |
+
+**下一步计划:**
+1. 测试数据组编辑功能（数值、颜色、删除）
+2. 测试雷达图完整 CRUD 流程
+3. 测试用户登录/注册功能
+4. 性能测试（大量数据情况）

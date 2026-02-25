@@ -20,7 +20,7 @@ const emit = defineEmits<Emits>()
 const localSeries = ref<DataSeries[]>([
   {
     id: Date.now(),
-    name: '系列1',
+    name: '数据组1',
     color: '#409eff',
     displayOrder: 0,
     data: [],
@@ -130,7 +130,7 @@ const removeSeries = (index: number) => {
         />
         <el-input
           :model-value="seriesItem.name"
-          placeholder="系列名称"
+          placeholder="数据组名称"
           size="small"
           style="flex: 1; margin: 0 10px"
           @update:model-value="updateSeries(seriesIndex, 'name', $event as string)"
@@ -174,7 +174,7 @@ const removeSeries = (index: number) => {
     </div>
     <el-button type="primary" size="small" @click="addSeries">
       <el-icon><Plus /></el-icon>
-      添加系列
+      添加数据
     </el-button>
   </div>
 </template>

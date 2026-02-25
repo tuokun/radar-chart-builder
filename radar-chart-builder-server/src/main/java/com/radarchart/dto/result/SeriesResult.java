@@ -1,12 +1,14 @@
 package com.radarchart.dto.result;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 
 public class SeriesResult {
     private Long id;
     private String name;
-    private Map<Long, Double> data; // dimensionId -> value
+    private String color;  // 前端使用的颜色
+    private Integer displayOrder;  // 前端使用的显示顺序
+    private List<SeriesDataResult> data;  // 改为数组格式
     private LocalDateTime createTime;
 
     public Long getId() {
@@ -25,11 +27,27 @@ public class SeriesResult {
         this.name = name;
     }
 
-    public Map<Long, Double> getData() {
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public List<SeriesDataResult> getData() {
         return data;
     }
 
-    public void setData(Map<Long, Double> data) {
+    public void setData(List<SeriesDataResult> data) {
         this.data = data;
     }
 

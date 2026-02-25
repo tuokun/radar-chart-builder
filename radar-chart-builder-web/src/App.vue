@@ -1,5 +1,13 @@
 <script setup lang="ts">
-// No need for initAuth here - it's called in router guard
+import { onErrorCaptured } from 'vue'
+
+onErrorCaptured((error, instance, info) => {
+  console.error('Vue Error:', error)
+  console.error('Component:', instance)
+  console.error('Info:', info)
+  // 返回 false 阻止错误继续传播
+  return false
+})
 </script>
 
 <template>

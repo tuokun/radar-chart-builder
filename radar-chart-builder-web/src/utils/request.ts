@@ -30,9 +30,11 @@ request.interceptors.request.use(
 // Response interceptor - handle errors
 request.interceptors.response.use(
   (response) => {
+    console.log('Response success:', response.status, response.data)
     return response.data
   },
   (error: AxiosError<ApiError>) => {
+    console.error('Response error:', error.response?.status, error.response?.data)
     if (error.response) {
       const { status, data } = error.response
 

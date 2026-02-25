@@ -1,9 +1,10 @@
 // Data model types
 // Backend fields: createTime, updateTime
-// Frontend fields: createdAt, updatedAt (transformed in API layer)
+// Frontend fields: createTime, updateTime (consistent with backend)
+// Note: IDs are strings to avoid JavaScript number precision loss
 
 export interface RadarChart {
-  id: number
+  id: string
   title: string
   description: string | null
   dimensions: Dimension[]
@@ -13,41 +14,51 @@ export interface RadarChart {
 }
 
 export interface Dimension {
-  id: number
+  id: string
   name: string
   description: string | null
+  minValue: number
   maxValue: number
-  displayOrder: number
+  orderIndex: number  // Backend uses orderIndex
 }
 
 export interface DataSeries {
-  id: number
+  id: string
   name: string
-  color: string
-  displayOrder: number
+  color: string  // Frontend only - for UI display
+  displayOrder: number  // Frontend only - for UI ordering
   data: SeriesData[]
+  createTime?: string  // Backend returns this
 }
 
 export interface SeriesData {
-  id: number
+  id: string
   value: number
-  dimensionId: number
-  seriesId: number
+  dimensionId: string
+  seriesId: string
 }
 
 // Create/Update DTOs
 export interface CreateRadarChartDto {
   title: string
   description?: string
-  dimensions: Omit<Dimension, 'id'>[]
+  dimensions: CreateDimensionDto[]
   series: CreateDataSeriesDto[]
 }
 
 export interface UpdateRadarChartDto {
   title?: string
   description?: string
-  dimensions?: Omit<Dimension, 'id'>[]
+  dimensions?: CreateDimensionDto[]
   series?: UpdateDataSeriesDto[]
+}
+
+export interface CreateDimensionDto {
+  name: string
+  description?: string
+  minValue: number
+  maxValue: number
+  orderIndex: number  // Backend uses orderIndex
 }
 
 export interface CreateDataSeriesDto {
@@ -58,7 +69,7 @@ export interface CreateDataSeriesDto {
 }
 
 export interface UpdateDataSeriesDto {
-  id: number
+  id: string
   name?: string
   color?: string
   displayOrder?: number

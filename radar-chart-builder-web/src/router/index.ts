@@ -7,8 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/radar/RadarListView.vue'),
-      meta: { requiresAuth: true },
+      redirect: '/radar',
     },
     {
       path: '/login',
@@ -23,16 +22,36 @@ const router = createRouter({
       meta: { guest: true },
     },
     {
-      path: '/radar/new',
-      name: 'radar-create',
-      component: () => import('@/views/radar/RadarEditView.vue'),
+      path: '/',
+      component: () => import('@/components/MainLayout.vue'),
       meta: { requiresAuth: true },
-    },
-    {
-      path: '/radar/:id',
-      name: 'radar-edit',
-      component: () => import('@/views/radar/RadarEditView.vue'),
-      meta: { requiresAuth: true },
+      children: [
+        {
+          path: 'radar',
+          name: 'radar-list',
+          component: () => import('@/views/radar/RadarListView.vue'),
+        },
+        {
+          path: 'radar/new',
+          name: 'radar-create',
+          component: () => import('@/views/radar/RadarFormView.vue'),
+        },
+        {
+          path: 'radar/:id/edit',
+          name: 'radar-edit',
+          component: () => import('@/views/radar/RadarFormView.vue'),
+        },
+        {
+          path: 'series/:id/preview',
+          name: 'series-preview',
+          component: () => import('@/views/series/SeriesPreviewView.vue'),
+        },
+        {
+          path: 'series/:id',
+          name: 'series-detail',
+          component: () => import('@/views/series/SeriesDetailView.vue'),
+        },
+      ],
     },
   ],
 })
@@ -52,7 +71,7 @@ router.beforeEach((to, _from, next) => {
     next({ name: 'login', query: { redirect: to.fullPath } })
   } else if (isGuestRoute && authStore.isAuthenticated) {
     // Redirect to home if already authenticated
-    next({ name: 'home' })
+    next({ name: 'radar-list' })
   } else {
     next()
   }

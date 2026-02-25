@@ -15,7 +15,7 @@ export const radarChartApi = {
    * GET /api/radar-charts/{id}
    * Returns: RadarChart
    */
-  getById: (id: number) =>
+  getById: (id: string) =>
     http.get<RadarChart>(`/radar-charts/${id}`),
 
   /**
@@ -31,7 +31,7 @@ export const radarChartApi = {
    * PUT /api/radar-charts/{id}
    * Returns: RadarChart
    */
-  update: (id: number, data: UpdateRadarChartDto) =>
+  update: (id: string, data: UpdateRadarChartDto) =>
     http.put<RadarChart>(`/radar-charts/${id}`, data),
 
   /**
@@ -39,6 +39,6 @@ export const radarChartApi = {
    * DELETE /api/radar-charts/{id}
    * Returns: void
    */
-  delete: (id: number) =>
+  delete: (id: string) =>
     http.delete<void>(`/radar-charts/${id}`),
 }

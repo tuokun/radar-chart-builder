@@ -123,11 +123,34 @@ const goToLogin = () => {
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
 }
 
 .auth-card {
-  width: 400px;
+  width: 100%;
+  max-width: 360px;
   border-radius: 8px;
+}
+
+/* 平板及以上 (>= 768px) */
+@media (min-width: 768px) {
+  .auth-card {
+    max-width: 420px;
+  }
+}
+
+/* 桌面 (>= 1024px) */
+@media (min-width: 1024px) {
+  .auth-card {
+    max-width: 480px;
+  }
+}
+
+/* 大屏幕 (>= 1440px) */
+@media (min-width: 1440px) {
+  .auth-card {
+    max-width: 540px;
+  }
 }
 
 .card-header {
@@ -137,6 +160,13 @@ const goToLogin = () => {
 .card-header h2 {
   margin: 0;
   color: var(--el-text-color-primary);
+  font-size: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .card-header h2 {
+    font-size: 1.75rem;
+  }
 }
 
 .auth-footer {

@@ -7,7 +7,7 @@ public class UserResult {
     private String username;
     private String email;
     private String nickname;
-    private LocalDateTime createdAt;
+    private LocalDateTime createTime;
 
     public Long getId() {
         return id;
@@ -41,12 +41,12 @@ public class UserResult {
         this.nickname = nickname;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public static UserResult fromEntity(com.radarchart.entity.User user) {
@@ -55,7 +55,7 @@ public class UserResult {
         result.setUsername(user.getUsername());
         result.setEmail(user.getEmail());
         result.setNickname(user.getNickname());
-        result.setCreatedAt(user.getCreatedAt());
+        result.setCreateTime(user.getCreateTime());
         return result;
     }
 
@@ -66,7 +66,7 @@ public class UserResult {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", createdAt=" + createdAt +
+                ", createTime=" + createTime +
                 '}';
     }
 }

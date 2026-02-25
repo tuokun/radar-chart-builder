@@ -20,7 +20,7 @@ export const useRadarChartStore = defineStore('radarChart', () => {
     }
   }
 
-  async function fetchById(id: number): Promise<RadarChart | null> {
+  async function fetchById(id: string): Promise<RadarChart | null> {
     loading.value = true
     try {
       const chart = await radarChartApi.getById(id)
@@ -37,19 +37,21 @@ export const useRadarChartStore = defineStore('radarChart', () => {
     loading.value = true
     try {
       const newChart = await radarChartApi.create(data)
+      console.log('API create response:', newChart)
 
       // Add to beginning of list
       charts.value.unshift(newChart)
 
       return newChart
-    } catch {
+    } catch (error) {
+      console.error('API create error:', error)
       return null
     } finally {
       loading.value = false
     }
   }
 
-  async function update(id: number, data: UpdateRadarChartDto): Promise<RadarChart | null> {
+  async function update(id: string, data: UpdateRadarChartDto): Promise<RadarChart | null> {
     loading.value = true
     try {
       const updatedChart = await radarChartApi.update(id, data)
@@ -73,7 +75,7 @@ export const useRadarChartStore = defineStore('radarChart', () => {
     }
   }
 
-  async function remove(id: number): Promise<boolean> {
+  async function remove(id: string): Promise<boolean> {
     loading.value = true
     try {
       await radarChartApi.delete(id)

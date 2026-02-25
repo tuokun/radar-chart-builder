@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { Search, Plus, MoreFilled, Edit, Delete } from '@element-plus/icons-vue'
@@ -13,25 +13,63 @@ const radarChartStore = useRadarChartStore()
 const authStore = useAuthStore()
 
 const searchQuery = ref('')
+const searchInputRef = ref()
+const filteredCharts = ref<RadarChart[]>([])
 
-const filteredCharts = computed(() => {
-  if (!searchQuery.value) {
-    return radarChartStore.charts
+// 初始化时显示所有图表
+watch(() => radarChartStore.charts, (charts) => {
+  filteredCharts.value = charts
+}, { immediate: true })
+
+const handleCreate = async () => {
+  try {
+    // 使用 nextTick 确保 DOM 更新完成
+    await nextTick()
+    await router.push('/radar/new')
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+    // 如果路由跳转失败，使用原生跳转
+    window.location.href = '/radar/new'
   }
-  const query = searchQuery.value.toLowerCase()
-  return radarChartStore.charts.filter(
-    (chart) =>
-      chart.title.toLowerCase().includes(query) ||
-      chart.description?.toLowerCase().includes(query)
-  )
-})
-
-const handleCreate = () => {
-  router.push('/radar/new')
 }
 
-const handleEdit = (chart: RadarChart) => {
-  router.push(`/radar/${chart.id}`)
+const handleDropdownCommand = (command: string, chart: RadarChart) => {
+  console.log('Dropdown command:', command, 'chart:', chart.title)
+  switch (command) {
+    case 'edit':
+      handleEdit(chart)
+      break
+    case 'delete':
+      handleDelete(chart)
+      break
+  }
+}
+
+const handleSearch = () => {
+  console.log('handleSearch called, searchQuery:', searchQuery.value)
+  if (!searchQuery.value.trim()) {
+    filteredCharts.value = radarChartStore.charts
+  } else {
+    const query = searchQuery.value.toLowerCase().trim()
+    filteredCharts.value = radarChartStore.charts.filter(
+      (chart) =>
+        chart.title.toLowerCase().includes(query) ||
+        chart.description?.toLowerCase().includes(query)
+    )
+  }
+  if (searchInputRef.value) {
+    searchInputRef.value.blur()
+  }
+}
+
+const handleEdit = async (chart: RadarChart) => {
+  try {
+    await nextTick()
+    await router.push(`/series/${chart.id}/preview`)
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+    window.location.href = `/series/${chart.id}/preview`
+  }
 }
 
 const handleDelete = async (chart: RadarChart) => {
@@ -46,7 +84,7 @@ const handleDelete = async (chart: RadarChart) => {
         confirmButtonClass: 'el-button--danger',
       }
     )
-    const success = await radarChartStore.remove(chart.id)
+    const success = await radarChartStore.remove(String(chart.id))
     if (success) {
       ElMessage.success('雷达图删除成功')
     }
@@ -76,123 +114,84 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="radar-list-container">
-    <el-container>
-      <el-header class="header">
-        <div class="header-left">
-          <h1>雷达图生成器</h1>
-        </div>
-        <div class="header-right">
-          <span class="username">{{ authStore.user?.username }}</span>
-          <el-button @click="handleLogout">退出登录</el-button>
-        </div>
-      </el-header>
+  <div class="radar-list-content">
+    <div class="toolbar">
+      <h2 class="page-title">我的雷达图</h2>
+      <div class="toolbar-actions">
+        <el-input
+          v-model="searchQuery"
+          placeholder="搜索雷达图..."
+          clearable
+          class="search-input"
+          @keyup.enter="handleSearch"
+          ref="searchInputRef"
+        >
+          <template #append>
+            <el-button :icon="Search" @click="handleSearch" />
+          </template>
+        </el-input>
+        <el-button type="primary" @click="handleCreate">
+          <el-icon><Plus /></el-icon>
+          创建雷达图
+        </el-button>
+      </div>
+    </div>
 
-      <el-main class="main">
-        <div class="toolbar">
-          <el-input
-            v-model="searchQuery"
-            placeholder="搜索雷达图..."
-            clearable
-            style="width: 300px"
-          >
-            <template #prefix>
-              <el-icon><Search /></el-icon>
-            </template>
-          </el-input>
-          <el-button type="primary" @click="handleCreate">
-            <el-icon><Plus /></el-icon>
-            创建雷达图
-          </el-button>
-        </div>
+    <el-empty v-if="filteredCharts.length === 0" description="暂无雷达图，点击上方按钮创建">
+      <el-button type="primary" @click="handleCreate">创建雷达图</el-button>
+    </el-empty>
 
-        <el-empty v-if="filteredCharts.length === 0" description="暂无雷达图，点击上方按钮创建">
-          <el-button type="primary" @click="handleCreate">创建雷达图</el-button>
-        </el-empty>
+    <el-row v-else :gutter="20" class="chart-grid">
+      <el-col
+        v-for="chart in filteredCharts"
+        :key="chart.id"
+        :xs="24"
+        :sm="12"
+        :md="8"
+        :lg="6"
+      >
+        <el-card class="chart-card" shadow="hover" @click="handleEdit(chart)">
+          <template #header>
+            <div class="card-header">
+              <span class="chart-title">{{ chart.title }}</span>
+              <el-dropdown trigger="click" @command="(cmd) => handleDropdownCommand(cmd, chart)">
+                <el-icon class="more-icon" @click.stop><MoreFilled /></el-icon>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item command="edit">
+                      <el-icon><Edit /></el-icon>
+                      编辑数据
+                    </el-dropdown-item>
+                    <el-dropdown-item command="delete" divided>
+                      <el-icon><Delete /></el-icon>
+                      删除
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
+          </template>
 
-        <el-row v-else :gutter="20" class="chart-grid">
-          <el-col
-            v-for="chart in filteredCharts"
-            :key="chart.id"
-            :xs="24"
-            :sm="12"
-            :md="8"
-            :lg="6"
-          >
-            <el-card class="chart-card" shadow="hover">
-              <template #header>
-                <div class="card-header">
-                  <span class="chart-title">{{ chart.title }}</span>
-                  <el-dropdown trigger="click">
-                    <el-icon class="more-icon"><MoreFilled /></el-icon>
-                    <template #dropdown>
-                      <el-dropdown-menu>
-                        <el-dropdown-item @click="handleEdit(chart)">
-                          <el-icon><Edit /></el-icon>
-                          编辑
-                        </el-dropdown-item>
-                        <el-dropdown-item divided @click="handleDelete(chart)">
-                          <el-icon><Delete /></el-icon>
-                          删除
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </template>
-                  </el-dropdown>
-                </div>
-              </template>
+          <div class="chart-preview">
+            <RadarChartPreview :chart="chart" :height="200" />
+          </div>
 
-              <div class="chart-preview">
-                <RadarChartPreview :chart="chart" :height="200" />
-              </div>
-
-              <div class="chart-info">
-                <p class="chart-description">{{ chart.description || '无描述' }}</p>
-                <div class="chart-meta">
-                  <el-tag size="small">{{ chart.dimensions.length }} 个维度</el-tag>
-                  <el-tag size="small" type="success">{{ chart.series.length }} 个系列</el-tag>
-                </div>
-                <p class="chart-date">更新于 {{ formatDate(chart.updateTime) }}</p>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
+          <div class="chart-info">
+            <p class="chart-description">{{ chart.description || '无描述' }}</p>
+            <div class="chart-meta">
+              <el-tag size="small">{{ chart.dimensions.length }} 个维度</el-tag>
+              <el-tag size="small" type="success">{{ chart.series.length }} 组数据</el-tag>
+            </div>
+            <p class="chart-date">更新于 {{ formatDate(chart.updateTime) }}</p>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <style scoped>
-.radar-list-container {
-  min-height: 100vh;
-  background-color: #f5f7fa;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  border-bottom: 1px solid #e4e7ed;
-  padding: 0 20px;
-}
-
-.header-left h1 {
-  margin: 0;
-  font-size: 20px;
-  color: #303133;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.username {
-  color: #606266;
-}
-
-.main {
+.radar-list-content {
   padding: 20px;
 }
 
@@ -201,6 +200,39 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 18px;
+  color: #303133;
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 20px;
+  }
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 200px;
+}
+
+@media (min-width: 768px) {
+  .search-input {
+    max-width: 280px;
+  }
 }
 
 .chart-grid {
@@ -210,6 +242,13 @@ onMounted(async () => {
 .chart-card {
   margin-bottom: 20px;
   height: calc(100% - 20px);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -223,15 +262,41 @@ onMounted(async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .chart-title {
+    font-size: 15px;
+  }
 }
 
 .more-icon {
   cursor: pointer;
   color: #909399;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: 20px !important;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-icon :deep(.el-icon) {
+  font-size: 20px !important;
+}
+
+.more-icon :deep(svg) {
+  width: 20px !important;
+  height: 20px !important;
 }
 
 .more-icon:hover {
   color: #409eff;
+  background-color: rgba(64, 158, 255, 0.1);
 }
 
 .chart-preview {
@@ -247,12 +312,18 @@ onMounted(async () => {
 .chart-description {
   margin: 0 0 8px 0;
   color: #606266;
-  font-size: 14px;
+  font-size: 13px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+@media (min-width: 768px) {
+  .chart-description {
+    font-size: 14px;
+  }
 }
 
 .chart-meta {
@@ -265,6 +336,12 @@ onMounted(async () => {
 .chart-date {
   margin: 0;
   color: #909399;
-  font-size: 12px;
+  font-size: 11px;
+}
+
+@media (min-width: 768px) {
+  .chart-date {
+    font-size: 12px;
+  }
 }
 </style>

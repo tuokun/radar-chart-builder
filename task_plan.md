@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 4: 前端开发（已完成）
+Phase 7: 前端联调测试与优化（已完成）
 
 ## Phases
 
@@ -79,6 +79,83 @@ Phase 4: 前端开发（已完成）
 - [x] 集成后端API
 - [x] 测试前端功能
 - [x] 修复API对接问题（端口、响应格式、字段名）
+- **Status:** complete
+
+### Phase 7: 前端联调测试与优化（已完成）
+<!-- WHAT: 前后端联调测试，发现问题并优化用户体验 -->
+<!-- WHY: 确保功能正常，优化用户体验 -->
+**测试时间：** 2026-02-25
+
+**完成的优化项目：**
+
+**页面布局优化：**
+- [x] 移除页面宽度限制（main.css）
+- [x] 适配移动端和桌面端布局
+
+**用户认证优化：**
+- [x] 登录接口字段适配（username → account）
+- [x] 登录表单添加长度验证
+- [x] 注册成功后跳转到登录页
+
+**数据模型优化：**
+- [x] 数据库字段统一（create_time/update_time）
+- [x] 前后端字段名统一（minValue、orderIndex）
+- [x] ID精度问题修复（Long → String）
+- [x] 添加 minValue 支持
+
+**页面结构优化：**
+- [x] 分离雷达图表单和数据组编辑为独立页面
+- [x] 创建 MainLayout 顶部导航栏
+- [x] 删除"数据系列"侧边栏菜单
+- [x] 添加维度编辑器
+- [x] 添加数据组编辑器
+
+**交互优化：**
+- [x] 删除操作添加二次确认
+- [x] Vue Router 切换错误修复
+- [x] 实时预览功能
+- [x] 维度输入框对齐问题修复
+
+**性能优化：**
+- [x] 列表页只返回基本信息，不返回系列数据
+- [x] 无系列时显示简易预览（各维度平均值）
+- [x] 删除图表内标题（避免遮挡数据）
+
+**数据系列功能优化：**
+- [x] 创建雷达图不自动生成数据组
+- [x] 允许删除所有数据组
+- [x] 保存数据组颜色信息
+- [x] 新增数据组在最前面显示
+
+**UI/UX优化：**
+- [x] 按钮文字优化（"添加数据"、"编辑雷达"、"数据组"）
+- [x] 列表页搜索框改为点击触发
+- [x] 搜索框样式优化（删除内图标、缩短宽度）
+- [x] 三点菜单图标大小优化
+- [x] 数据组名称框高度和字体优化
+- [x] 颜色选择器按钮中文化（重置/保存）
+
+**页面流程优化：**
+- [x] 点击卡片 → 预览页面（只读）
+- [x] 点击"编辑数据"按钮 → 编辑页面（可编辑）
+- [x] 预览页面 Grid 布局（一行两组数据）
+
+**技术优化：**
+- [x] 后端添加 JacksonConfig（Long 序列化为字符串）
+- [x] UpdateRadarChartParam 添加 series 字段
+- [x] DataSeries 实体添加 color 字段
+- [x] 路由顺序优化（具体路由在前）
+
+**Files created/modified:**
+- `radar-chart-builder-server/src/main/java/com/radarchart/config/JacksonConfig.java` (created)
+- `radar-chart-builder-server/src/main/java/com/radarchart/entity/DataSeries.java` (modified - 添加color字段)
+- `radar-chart-builder-server/src/main/java/com/radarchart/dto/param/UpdateRadarChartParam.java` (modified - 添加series字段)
+- `radar-chart-builder-web/src/components/MainLayout.vue` (created - 顶部导航)
+- `radar-chart-builder-web/src/views/radar/RadarFormView.vue` (modified - 表单页面)
+- `radar-chart-builder-web/src/views/series/SeriesDetailView.vue` (created - 数据组编辑页)
+- `radar-chart-builder-web/src/views/series/SeriesPreviewView.vue` (created - 预览页面)
+- `radar-chart-builder-web/src/views/radar/RadarListView.vue` (modified - 搜索优化)
+- `radar-chart-builder-web/src/assets/main.css` (modified - 颜色选择器按钮中文化)
 - **Status:** complete
 
 ### Phase 5: 微信小程序开发（待定）
@@ -170,6 +247,9 @@ Phase 4: 前端开发（已完成）
 | 前端验证不足 | 1 | 添加用户名和密码长度验证 |
 | 前端图标未导入 | 1 | 导入 Plus 和 Delete 图标 |
 | 前端重复 initAuth | 1 | 移除 App.vue 中的调用 |
+| 后端字段命名不统一 | 1 | users表字段改为 create_time/update_time，统一实体和DTO |
+| 测试接口403错误 | 1 | SecurityConfig 添加 /api/health 和 /api/test/** 白名单 |
+| TestController 过度简化 | 1 | 回滚 d→duration，>>20 → /1024/1024，移除 measureLatency |
 
 ## Notes
 <!-- REMINDERS: -->

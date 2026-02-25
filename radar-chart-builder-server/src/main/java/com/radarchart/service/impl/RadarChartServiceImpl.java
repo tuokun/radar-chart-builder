@@ -55,12 +55,37 @@ public class RadarChartServiceImpl implements RadarChartService {
             dimensionMapper.insert(dim);
         }
 
-        // 3. 构建返回结果
-        return buildRadarChartResult(chart, dimensions, Collections.emptyList());
+        // 3. 创建数据系列
+        List<DataSeries> seriesList = new ArrayList<>();
+        if (param.getSeries() != null && !param.getSeries().isEmpty()) {
+            for (CreateRadarChartParam.SeriesParam seriesParam : param.getSeries()) {
+                DataSeries series = new DataSeries();
+                series.setRadarChartId(chart.getId());
+                series.setName(seriesParam.getName());
+                dataSeriesMapper.insert(series);
+
+                // 创建系列数据
+                if (seriesParam.getData() != null && !seriesParam.getData().isEmpty()) {
+                    for (CreateRadarChartParam.SeriesDataParam dataParam : seriesParam.getData()) {
+                        SeriesData data = new SeriesData();
+                        data.setSeriesId(series.getId());
+                        data.setDimensionId(getDimensionIdByIndex(dimensions, dataParam.getDimensionId()));
+                        data.setValue(dataParam.getValue());
+                        seriesDataMapper.insert(data);
+                    }
+                }
+
+                seriesList.add(series);
+            }
+        }
+
+        // 4. 构建返回结果
+        return buildRadarChartResult(chart, dimensions, seriesList);
     }
 
     @Override
     public List<RadarChartResult> getUserRadarCharts(Long userId) {
+        //todo 是否可以合并查询
         // 查询用户的所有雷达图
         List<RadarChart> charts = radarChartMapper.selectList(
                 new LambdaQueryWrapper<RadarChart>()
@@ -68,18 +93,16 @@ public class RadarChartServiceImpl implements RadarChartService {
                         .orderByDesc(RadarChart::getCreateTime)
         );
 
-        // 为每个图表加载维度和系列
+        // 为每个图表加载维度信息（不加载系列数据，提升列表页性能）
         List<RadarChartResult> results = new ArrayList<>();
         for (RadarChart chart : charts) {
             List<Dimension> dimensions = dimensionMapper.selectList(
                     new LambdaQueryWrapper<Dimension>()
                             .eq(Dimension::getRadarChartId, chart.getId())
+                            .orderByAsc(Dimension::getOrderIndex)
             );
-            List<DataSeries> seriesList = dataSeriesMapper.selectList(
-                    new LambdaQueryWrapper<DataSeries>()
-                            .eq(DataSeries::getRadarChartId, chart.getId())
-            );
-            results.add(buildRadarChartResult(chart, dimensions, seriesList));
+            // 系列数据留空，列表页不需要
+            results.add(buildRadarChartResult(chart, dimensions, List.of()));
         }
         return results;
     }
@@ -114,6 +137,45 @@ public class RadarChartServiceImpl implements RadarChartService {
         }
 
         radarChartMapper.updateById(chart);
+
+        // 处理系列数据
+        if (param.getSeries() != null) {
+            // 删除该雷达图的所有现有系列及其数据
+            List<DataSeries> existingSeries = dataSeriesMapper.selectList(
+                    new LambdaQueryWrapper<DataSeries>()
+                            .eq(DataSeries::getRadarChartId, id)
+            );
+            for (DataSeries series : existingSeries) {
+                seriesDataMapper.delete(
+                        new LambdaQueryWrapper<SeriesData>()
+                                .eq(SeriesData::getSeriesId, series.getId())
+                );
+            }
+            dataSeriesMapper.delete(
+                    new LambdaQueryWrapper<DataSeries>()
+                            .eq(DataSeries::getRadarChartId, id)
+            );
+
+            // 创建新系列
+            for (UpdateRadarChartParam.SeriesParam seriesParam : param.getSeries()) {
+                DataSeries series = new DataSeries();
+                series.setRadarChartId(id);
+                series.setName(seriesParam.getName());
+                series.setColor(seriesParam.getColor());  // 保存颜色
+                dataSeriesMapper.insert(series);
+
+                // 创建系列数据
+                if (seriesParam.getData() != null && !seriesParam.getData().isEmpty()) {
+                    for (UpdateRadarChartParam.SeriesDataParam dataParam : seriesParam.getData()) {
+                        SeriesData data = new SeriesData();
+                        data.setSeriesId(series.getId());
+                        data.setDimensionId(Long.parseLong(dataParam.getDimensionId()));
+                        data.setValue(dataParam.getValue());
+                        seriesDataMapper.insert(data);
+                    }
+                }
+            }
+        }
 
         return getRadarChartDetail(id, userId);
     }
@@ -420,10 +482,28 @@ public class RadarChartServiceImpl implements RadarChartService {
         return result;
     }
 
+    /**
+     * 根据索引获取维度ID
+     * 前端创建时发送的是索引（0, 1, 2...），需要映射到实际的维度ID
+     */
+    private Long getDimensionIdByIndex(List<Dimension> dimensions, Integer index) {
+        if (index == null || index < 0 || index >= dimensions.size()) {
+            throw new BadRequestException("维度索引无效: " + index);
+        }
+        // 按orderIndex排序后找到对应位置的维度
+        Dimension dim = dimensions.stream()
+                .sorted((a, b) -> Integer.compare(a.getOrderIndex(), b.getOrderIndex()))
+                .collect(java.util.stream.Collectors.toList())
+                .get(index);
+        return dim.getId();
+    }
+
     private SeriesResult buildSeriesResult(DataSeries series) {
         SeriesResult result = new SeriesResult();
         result.setId(series.getId());
         result.setName(series.getName());
+        result.setColor(series.getColor() != null ? series.getColor() : "#409eff");  // 使用保存的颜色或默认颜色
+        result.setDisplayOrder(0);  // 默认显示顺序
         result.setCreateTime(series.getCreateTime());
 
         // 加载系列数据
@@ -432,11 +512,17 @@ public class RadarChartServiceImpl implements RadarChartService {
                         .eq(SeriesData::getSeriesId, series.getId())
         );
 
-        Map<Long, Double> dataMap = new HashMap<>();
+        // 转换为数组格式
+        List<com.radarchart.dto.result.SeriesDataResult> dataResults = new ArrayList<>();
         for (SeriesData sd : dataList) {
-            dataMap.put(sd.getDimensionId(), sd.getValue());
+            com.radarchart.dto.result.SeriesDataResult sdr = new com.radarchart.dto.result.SeriesDataResult();
+            sdr.setId(sd.getId());
+            sdr.setDimensionId(sd.getDimensionId());
+            sdr.setValue(sd.getValue());
+            sdr.setSeriesId(sd.getSeriesId());
+            dataResults.add(sdr);
         }
-        result.setData(dataMap);
+        result.setData(dataResults);
 
         return result;
     }

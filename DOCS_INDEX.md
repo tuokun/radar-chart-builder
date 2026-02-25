@@ -63,6 +63,18 @@
 | P1 | `task_plan.md` | 更新 Decisions Made（前端技术栈） |
 | P2 | `task_plan.md` | 更新 关键决策记录 |
 
+### Phase 7: 前端联调测试与优化
+
+**完成后需要更新的文档：**
+
+| 优先级 | 文档 | 更新内容 |
+|-------|------|---------|
+| P0 | `progress.md` | 添加 Phase 7 开始时间、完成时间、Actions taken、Files created/modified |
+| P0 | `progress.md` | 添加所有优化项目到 Actions taken |
+| P0 | `progress.md` | 添加测试结果到 Test Results |
+| P0 | `task_plan.md` | 更新 Current Phase、Phase 7 状态标记为 complete |
+| P1 | `task_plan.md` | 更新 Decisions Made（如有新决策） |
+
 ### 通用任务
 
 #### 修复 Bug / 问题
@@ -140,13 +152,14 @@
 
 | 文档 | 最后更新时间 | 内容阶段 |
 |------|-------------|---------|
-| `progress.md` | 2026-02-17 | Phase 1, 2, 4 完成 |
-| `task_plan.md` | 2026-02-17 | Phase 1, 2, 4 完成 |
+| `progress.md` | 2026-02-25 | Phase 1, 2, 4, 7 完成 |
+| `task_plan.md` | 2026-02-25 | Phase 1, 2, 4, 7 完成 |
 | `产品需求文档.md` | 2026-02-12 | 初始版本 |
 | `IDEA_SETUP.md` | 2026-02-15 | IDEA配置说明 |
 | `docs/plans/2026-02-16-雷达图核心功能设计.md` | 2026-02-16 | 设计完成 |
 | `docs/plans/2026-02-16-雷达图核心功能实施计划.md` | 2026-02-16 | 实施完成 |
 | `docs/接口文档/雷达图API测试指南.md` | 2026-02-17 | API测试完成 |
+| `docs/前端测试说明.md` | 2026-02-23 | 前端测试准备 |
 | `radar-chart-builder-web/README.md` | 2026-02-17 | 前端项目说明 |
 
 ---

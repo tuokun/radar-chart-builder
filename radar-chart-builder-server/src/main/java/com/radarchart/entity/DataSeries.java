@@ -13,6 +13,7 @@ public class DataSeries {
 
     private Long radarChartId;
     private String name;
+    private String color;  // 系列颜色
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -49,6 +50,14 @@ public class DataSeries {
         this.createTime = createTime;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,6 +77,7 @@ public class DataSeries {
                 "id=" + id +
                 ", radarChartId=" + radarChartId +
                 ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
                 ", createTime=" + createTime +
                 '}';
     }

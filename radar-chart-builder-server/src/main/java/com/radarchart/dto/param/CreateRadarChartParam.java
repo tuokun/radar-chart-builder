@@ -18,6 +18,8 @@ public class CreateRadarChartParam {
     @Size(min = 3, message = "至少需要3个维度")
     private List<DimensionParam> dimensions;
 
+    private List<SeriesParam> series;
+
     public String getTitle() {
         return title;
     }
@@ -40,6 +42,14 @@ public class CreateRadarChartParam {
 
     public void setDimensions(List<DimensionParam> dimensions) {
         this.dimensions = dimensions;
+    }
+
+    public List<SeriesParam> getSeries() {
+        return series;
+    }
+
+    public void setSeries(List<SeriesParam> series) {
+        this.series = series;
     }
 
     public static class DimensionParam {
@@ -83,6 +93,70 @@ public class CreateRadarChartParam {
 
         public void setOrderIndex(Integer orderIndex) {
             this.orderIndex = orderIndex;
+        }
+    }
+
+    public static class SeriesParam {
+        @NotBlank(message = "系列名称不能为空")
+        @Size(max = 50, message = "系列名称长度不能超过50")
+        private String name;
+
+        private String color = "#409eff";  // 默认颜色
+        private Integer displayOrder = 0;  // 默认显示顺序
+
+        private List<SeriesDataParam> data;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public Integer getDisplayOrder() {
+            return displayOrder;
+        }
+
+        public void setDisplayOrder(Integer displayOrder) {
+            this.displayOrder = displayOrder;
+        }
+
+        public List<SeriesDataParam> getData() {
+            return data;
+        }
+
+        public void setData(List<SeriesDataParam> data) {
+            this.data = data;
+        }
+    }
+
+    public static class SeriesDataParam {
+        private Integer dimensionId;  // 使用索引而不是ID，前端发送的是索引
+        private Double value;
+
+        public Integer getDimensionId() {
+            return dimensionId;
+        }
+
+        public void setDimensionId(Integer dimensionId) {
+            this.dimensionId = dimensionId;
+        }
+
+        public Double getValue() {
+            return value;
+        }
+
+        public void setValue(Double value) {
+            this.value = value;
         }
     }
 }

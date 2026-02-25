@@ -9,13 +9,13 @@ const route = useRoute()
 const authStore = useAuthStore()
 
 const loginForm = reactive<LoginRequest>({
-  username: '',
+  account: '',
   password: '',
 })
 
 const loading = ref(false)
 const rules = {
-  username: [
+  account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
   ],
@@ -65,9 +65,9 @@ const goToRegister = () => {
         label-width="80px"
         @submit.prevent="handleLogin"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" prop="account">
           <el-input
-            v-model="loginForm.username"
+            v-model="loginForm.account"
             placeholder="请输入用户名"
             @keyup.enter="handleLogin"
           />
@@ -112,11 +112,34 @@ const goToRegister = () => {
   align-items: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
 }
 
 .auth-card {
-  width: 400px;
+  width: 100%;
+  max-width: 360px;
   border-radius: 8px;
+}
+
+/* 平板及以上 (>= 768px) */
+@media (min-width: 768px) {
+  .auth-card {
+    max-width: 420px;
+  }
+}
+
+/* 桌面 (>= 1024px) */
+@media (min-width: 1024px) {
+  .auth-card {
+    max-width: 480px;
+  }
+}
+
+/* 大屏幕 (>= 1440px) */
+@media (min-width: 1440px) {
+  .auth-card {
+    max-width: 540px;
+  }
 }
 
 .card-header {
@@ -126,6 +149,13 @@ const goToRegister = () => {
 .card-header h2 {
   margin: 0;
   color: var(--el-text-color-primary);
+  font-size: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .card-header h2 {
+    font-size: 1.75rem;
+  }
 }
 
 .auth-footer {

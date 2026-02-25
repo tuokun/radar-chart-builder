@@ -1,9 +1,9 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   font-weight: normal;
 }
 
@@ -21,15 +21,24 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/* 修改颜色选择器按钮文字 */
+.el-color-picker-panel .el-color-footer__link-btn {
+  font-size: 0 !important;
 }
+
+.el-color-picker-panel .el-color-footer__link-btn::after {
+  content: '重置' !important;
+  font-size: 12px !important;
+  display: inline-block !important;
+}
+
+.el-color-picker-panel .el-color-footer__btn {
+  font-size: 0 !important;
+}
+
+.el-color-picker-panel .el-color-footer__btn::after {
+  content: '保存' !important;
+  font-size: 12px !important;
+  display: inline-block !important;
+}
+
