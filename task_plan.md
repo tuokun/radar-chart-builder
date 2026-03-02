@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 7: 前端联调测试与优化（已完成）
+Phase 8: Docker 部署准备（文档已完成，待实施）
 
 ## Phases
 
@@ -157,6 +157,59 @@ Phase 7: 前端联调测试与优化（已完成）
 - `radar-chart-builder-web/src/views/radar/RadarListView.vue` (modified - 搜索优化)
 - `radar-chart-builder-web/src/assets/main.css` (modified - 颜色选择器按钮中文化)
 - **Status:** complete
+
+### Phase 8: Docker 部署准备（设计完成，待实施）
+<!-- WHAT: 编写 Docker 容器化部署文档 -->
+<!-- WHY: 为生产部署做准备，简化部署流程，确保环境一致性 -->
+**文档时间：** 2026-02-25
+**设计时间：** 2026-03-02
+
+**完成的任务：**
+- [x] 编写 Docker Desktop 安装指南（Windows/Mac）
+- [x] 编写外部数据库准备指南
+- [x] 设计部署方案（后端 + 前端，数据库外部部署）
+- [x] 编写完整的配置文件模板：
+  - [x] 后端 Dockerfile（多阶段构建）
+  - [x] 前端 Dockerfile（多阶段构建）
+  - [x] Nginx 配置文件
+  - [x] docker-compose.yml（容器编排）
+  - [x] 环境变量模板（.env.example）
+- [x] 编写详细的部署步骤
+- [x] 添加常见问题解答（数据库连接、Windows 特有配置等）
+- [x] 添加生产环境优化建议
+- [x] 编写设计文档（2026-03-02）
+- [x] 编写详细实施计划（2026-03-02）
+
+**技术方案：**
+- **容器化方式：** Docker Compose（Docker Desktop 原生支持）
+- **数据库部署：** 外部部署（不使用 Docker）
+- **容器数量：** 2 个（后端 + 前端）
+- **网络：** bridge 网络容器间通信
+- **数据持久化：** 外部数据库独立管理
+- **后端构建：** Maven 3.9.12 + Eclipse Temurin JRE 21
+- **前端构建：** Node 24-alpine + Nginx Alpine
+
+**文档位置：**
+- `docs/Docker部署指南.md` - 用户部署手册
+- `docs/plans/2026-03-02-docker-deployment-design.md` - 设计文档
+- `docs/plans/2026-03-02-docker-deployment-implementation.md` - 实施计划
+
+**特性：**
+- 面向 Docker Desktop 初学者（包含安装指南）
+- 支持 Windows 和 Mac
+- 数据库外部部署（灵活管理）
+- 完整的配置文件模板
+- 详细的故障排除指南
+- 云服务器迁移方案
+
+**本地测试配置：**
+- 数据库：host.docker.internal（本地 MariaDB）
+- 用户名：root
+- 密码：cgfhsc
+- 数据库：radar_chart_builder
+- 前端端口：3000
+
+**Status:** planned（设计完成，待实施）
 
 ### Phase 5: 微信小程序开发（待定）
 <!-- WHAT: 开发微信小程序版本 -->

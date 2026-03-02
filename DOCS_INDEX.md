@@ -16,6 +16,8 @@
 | `IDEA_SETUP.md` | 配置说明 | IntelliJ IDEA 配置指南 |
 | `docs/plans/` | 计划文档 | 各阶段详细设计和实施计划 |
 | `docs/接口文档/` | API文档 | 接口测试指南 |
+| `docs/Docker部署指南.md` | 部署文档 | Docker 容器化部署用户手册 |
+| `deploy/` | 部署配置 | 云服务器部署相关文件 |
 
 ---
 
@@ -74,6 +76,19 @@
 | P0 | `progress.md` | 添加测试结果到 Test Results |
 | P0 | `task_plan.md` | 更新 Current Phase、Phase 7 状态标记为 complete |
 | P1 | `task_plan.md` | 更新 Decisions Made（如有新决策） |
+
+### Phase 8: Docker 部署准备
+
+**完成后需要更新的文档：**
+
+| 优先级 | 文档 | 更新内容 |
+|-------|------|---------|
+| P0 | `progress.md` | 添加 Phase 8 开始时间、完成时间、Actions taken、设计文档信息 |
+| P0 | `task_plan.md` | 更新 Current Phase、Phase 8 状态（design_complete → complete） |
+| P0 | `docs/plans/2026-03-02-docker-deployment-design.md` | 设计文档（已创建） |
+| P0 | `docs/plans/2026-03-02-docker-deployment-implementation.md` | 实施计划（已创建） |
+| P1 | `DOCS_INDEX.md` | 添加新文档索引 |
+| P1 | `deploy/README.md` | 云服务器部署说明 |
 
 ### 通用任务
 
@@ -152,8 +167,11 @@
 
 | 文档 | 最后更新时间 | 内容阶段 |
 |------|-------------|---------|
-| `progress.md` | 2026-02-25 | Phase 1, 2, 4, 7 完成 |
-| `task_plan.md` | 2026-02-25 | Phase 1, 2, 4, 7 完成 |
+| `progress.md` | 2026-03-02 | Phase 1, 2, 4, 7, 8 设计完成 |
+| `task_plan.md` | 2026-03-02 | Phase 1, 2, 4, 7 完成, 8 设计完成 |
+| `docs/Docker部署指南.md` | 2026-02-25 | Docker 部署文档完成 |
+| `docs/plans/2026-03-02-docker-deployment-design.md` | 2026-03-02 | Docker 部署设计文档 |
+| `docs/plans/2026-03-02-docker-deployment-implementation.md` | 2026-03-02 | Docker 部署实施计划 |
 | `产品需求文档.md` | 2026-02-12 | 初始版本 |
 | `IDEA_SETUP.md` | 2026-02-15 | IDEA配置说明 |
 | `docs/plans/2026-02-16-雷达图核心功能设计.md` | 2026-02-16 | 设计完成 |

@@ -6,6 +6,55 @@
   WHEN: 每个阶段完成或遇到错误时更新
 -->
 
+## Session: 2026-03-02
+
+### Phase 8: Docker 部署设计
+<!-- WHAT: 完成容器化部署的设计和实施计划 -->
+<!-- WHY: 为本地测试和云服务器部署做准备 -->
+- **Status:** design_complete
+- **Date:** 2026-03-02
+
+<!-- Actions taken: -->
+- 使用 brainstorming 技能探讨 Docker 部署方案
+- 确定渐进式部署方案（数据库外部部署）
+- 收集本地环境信息：
+  - Mac Docker Desktop
+  - 本地 MariaDB（root/cgfhsc）
+  - Maven 3.9.12
+  - Node 24.13.0
+- 使用 writing-plans 技能创建详细实施计划
+
+<!-- 完成的设计文档: -->
+- `docs/plans/2026-03-02-docker-deployment-design.md` - 设计文档
+- `docs/plans/2026-03-02-docker-deployment-implementation.md` - 实施计划
+
+<!-- 技术方案: -->
+- 后端：Maven 3.9.12 + Eclipse Temurin JRE 21
+- 前端：Node 24-alpine + Nginx Alpine
+- 数据库：外部部署（本地用 host.docker.internal）
+- 容器编排：Docker Compose
+- 网络：bridge 网络，容器间通过服务名通信
+
+<!-- 实施计划包含 11 个任务: -->
+1. 创建项目根目录配置文件（.dockerignore, .env.example, .env）
+2. 创建后端 Docker 配置（Dockerfile, application-prod.yml）
+3. 创建前端 Docker 配置（Dockerfile, nginx.conf）
+4. 创建 Docker Compose 配置
+5. 创建云服务器部署配置
+6. 数据库初始化验证
+7. 构建和启动容器
+8. 功能验证测试
+9. 常用操作验证
+10. 更新项目文档
+11. 最终验证和清理
+
+<!-- 后续步骤: -->
+- 等待用户确认后执行实施计划
+- 本地 Mac Docker Desktop 测试
+- 云服务器迁移（腾讯云）
+
+---
+
 ## Session: 2026-02-13
 
 ### Phase 1: 后端基础架构搭建
@@ -611,10 +660,10 @@
 - [x] 列表页显示"x组数据"
 
 **待测试（数据组功能）：**
-- [ ] 编辑数据组数值
-- [ ] 修改数据组颜色
-- [ ] 删除数据组
-- [ ] 数据组数值滑块交互
+- [x] 编辑数据组数值
+- [x] 修改数据组颜色
+- [x] 删除数据组
+- [x] 数据组数值滑块交互
 
 **Error Log (本会话):**
 | Timestamp | Error | 修复 |
@@ -627,5 +676,73 @@
 **下一步计划:**
 1. 测试数据组编辑功能（数值、颜色、删除）
 2. 测试雷达图完整 CRUD 流程
+
+## Session: 2026-02-25 (下午)
+
+### 前端联调测试 - 完成 & Docker 部署准备
+<!-- WHAT: 完成前端测试并编写 Docker 部署文档 -->
+<!-- WHY: 测试通过，为生产部署做准备 -->
+- **Status:** complete
+- **Started:** 2026-02-25 18:00
+- **Updated:** 2026-02-25 20:00
+
+**Actions taken:**
+
+**前端测试完成验证：**
+- [x] 编辑数据组数值
+- [x] 修改数据组颜色
+- [x] 删除数据组
+- [x] 数据组数值滑块交互
+- [x] 雷达图完整 CRUD 流程测试
+
+**前端最终优化：**
+- [x] 删除"数据系列"侧边栏菜单
+- [x] 改用顶部导航栏（简化布局）
+- [x] 创建预览页面（SeriesPreviewView.vue）
+- [x] 修改页面流程：点击卡片 → 预览页 → 点击编辑 → 编辑页
+- [x] 预览页面 Grid 布局（一行两组数据）
+- [x] 新增数据组在最前面显示
+- [x] 数据组名称框高度和字体优化
+- [x] 修复路由顺序问题
+
+**Docker 部署文档编写：**
+- [x] 创建 Docker 部署指南（docs/Docker部署指南.md）
+- [x] Docker Desktop 安装指南（Windows/Mac）
+- [x] 外部数据库准备指南
+- [x] 部署方案设计（2容器架构：后端+前端）
+- [x] 完整配置文件模板：
+  - [x] 后端 Dockerfile（多阶段构建）
+  - [x] 前端 Dockerfile（多阶段构建）
+  - [x] Nginx 配置文件
+  - [x] docker-compose.yml
+  - [x] 环境变量模板
+- [x] 详细部署步骤
+- [x] 常见问题解答（含 Windows/Mac 特有问题）
+- [x] 生产环境优化建议
+
+**技术决策：**
+- 数据库不进行 Docker 部署（使用外部部署）
+- 采用 Docker Compose 作为主要部署方式
+- 使用 host.docker.internal（Windows/Mac Docker Desktop 访问主机）
+
+**Files created/modified:**
+- `docs/Docker部署指南.md` (created - 完整部署文档)
+- `task_plan.md` (modified - 添加 Phase 8)
+
+**测试结果（雷达图功能）：**
+- ✅ 创建雷达图 → 自动跳转到数据组页
+- ✅ 添加/编辑/删除数据组
+- ✅ 颜色保存生效
+- ✅ 数据持久化正常
+- ✅ 预览页面实时显示图表
+- ✅ 搜索功能正常
+- ✅ 三点菜单操作正常
+
+**Error Log (本会话):**
+- 无新错误
+
+**下一步计划:**
+1. 执行 Docker 部署测试（可选）
+2. 考虑后续功能开发（如需要）
 3. 测试用户登录/注册功能
 4. 性能测试（大量数据情况）
