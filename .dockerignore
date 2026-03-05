@@ -1,0 +1,20 @@
+# Git
+.git
+.gitignore
+.claude
+
+# IDE
+.idea
+*.iml
+.DS_Store
+
+# Docs
+docs
+*.md
+
+# Logs
+*.log
+
+# Temp files
+.env
+*.tmp
