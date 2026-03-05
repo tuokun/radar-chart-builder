@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 8: Docker 部署准备（文档已完成，待实施）
+Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
 
 ## Phases
 
@@ -158,27 +158,35 @@ Phase 8: Docker 部署准备（文档已完成，待实施）
 - `radar-chart-builder-web/src/assets/main.css` (modified - 颜色选择器按钮中文化)
 - **Status:** complete
 
-### Phase 8: Docker 部署准备（设计完成，待实施）
-<!-- WHAT: 编写 Docker 容器化部署文档 -->
+### Phase 8: Docker 部署实施（配置完成，镜像构建中）
+<!-- WHAT: 编写 Docker 容器化部署文档并执行实施 -->
 <!-- WHY: 为生产部署做准备，简化部署流程，确保环境一致性 -->
 **文档时间：** 2026-02-25
 **设计时间：** 2026-03-02
+**实施时间：** 2026-03-05
 
-**完成的任务：**
+**设计阶段完成的任务：**
 - [x] 编写 Docker Desktop 安装指南（Windows/Mac）
 - [x] 编写外部数据库准备指南
 - [x] 设计部署方案（后端 + 前端，数据库外部部署）
-- [x] 编写完整的配置文件模板：
-  - [x] 后端 Dockerfile（多阶段构建）
-  - [x] 前端 Dockerfile（多阶段构建）
-  - [x] Nginx 配置文件
-  - [x] docker-compose.yml（容器编排）
-  - [x] 环境变量模板（.env.example）
-- [x] 编写详细的部署步骤
-- [x] 添加常见问题解答（数据库连接、Windows 特有配置等）
-- [x] 添加生产环境优化建议
 - [x] 编写设计文档（2026-03-02）
 - [x] 编写详细实施计划（2026-03-02）
+
+**实施阶段完成的任务：**
+- [x] 创建 Docker 配置文件：
+  - [x] `.dockerignore` - 项目根目录忽略文件
+  - [x] `.env` - 环境变量配置（简化版，只保留一份）
+  - [x] `radar-chart-builder-server/Dockerfile` - 后端镜像构建
+  - [x] `radar-chart-builder-server/src/main/resources/application-prod.yml` - 生产配置
+  - [x] `radar-chart-builder-web/Dockerfile` - 前端镜像构建
+  - [x] `radar-chart-builder-web/nginx.conf` - Nginx 配置
+  - [x] `docker-compose.yml` - 容器编排
+- [x] 创建操作文档：
+  - [x] `docs/Mac-DockerDesktop-后端镜像构建指南.md`
+- [ ] 构建后端 Docker 镜像（进行中）
+- [ ] 构建前端 Docker 镜像
+- [ ] 启动容器测试
+- [ ] 功能验证
 
 **技术方案：**
 - **容器化方式：** Docker Compose（Docker Desktop 原生支持）

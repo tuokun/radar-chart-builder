@@ -6,6 +6,53 @@
   WHEN: 每个阶段完成或遇到错误时更新
 -->
 
+## Session: 2026-03-05
+
+### Phase 8: Docker 部署实施
+<!-- WHAT: 执行 Docker 容器化部署实施计划 -->
+<!-- WHY: 在本地 Mac Docker Desktop 上进行容器化部署 -->
+- **Status:** in_progress
+- **Date:** 2026-03-05
+
+<!-- Actions taken: -->
+- 简化环境配置：删除 .env.example 和 deploy 目录，只保留 .env
+- 创建后端 Docker 配置文件：
+  - `.dockerignore` - 项目根目录忽略文件
+  - `radar-chart-builder-server/.dockerignore` - 后端忽略文件
+  - `radar-chart-builder-server/Dockerfile` - 后端镜像构建文件
+  - `radar-chart-builder-server/src/main/resources/application-prod.yml` - 生产环境配置
+- 创建前端 Docker 配置文件：
+  - `radar-chart-builder-web/.dockerignore` - 前端忽略文件
+  - `radar-chart-builder-web/Dockerfile` - 前端镜像构建文件
+  - `radar-chart-builder-web/nginx.conf` - Nginx 配置文件
+- 创建容器编排配置：
+  - `docker-compose.yml` - Docker Compose 编排文件
+  - `.env` - 环境变量配置（本地）
+- 创建操作文档：
+  - `docs/Mac-DockerDesktop-后端镜像构建指南.md` - Mac 构建指南
+
+<!-- 已完成的任务: -->
+- Task 1: ✅ 创建项目根目录配置文件
+- Task 2: ✅ 创建后端 Docker 配置
+- Task 3: ✅ 创建前端 Docker 配置
+- Task 4: ✅ 创建 Docker Compose 配置
+- Task 5: ✅ 简化配置（删除多余的 .env.example）
+
+<!-- 待执行的任务: -->
+- Task 6: 数据库初始化验证
+- Task 7: 构建和启动容器
+- Task 8: 功能验证测试
+
+<!-- Git 提交记录: -->
+- 58018b5: chore: add Docker config templates and ignore files
+- 2737c92: feat: add backend Dockerfile and prod config
+- 9ee96e1: feat: add frontend Dockerfile and nginx config
+- 6076989: feat: add docker-compose configuration
+- 4a31ea8: refactor: simplify env config, keep only .env for local use
+- 197bee6: docs: add Mac Docker Desktop backend image build guide
+
+---
+
 ## Session: 2026-03-02
 
 ### Phase 8: Docker 部署设计
