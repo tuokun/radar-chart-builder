@@ -45,6 +45,9 @@ node_modules/
 # Planning documents
 docs/plans/
 
+# Claude Code config (local only)
+.clauderc
+
 # Planning and docs (we want to track these!)
 # docs/
 # task_plan.md
