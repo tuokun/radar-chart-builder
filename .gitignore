@@ -48,6 +48,14 @@ docs/plans/
 # Claude Code config (local only)
 .clauderc
 
+# Local development files (not tracked in remote)
+AGENTS.md
+DOCS_INDEX.md
+findings.md
+progress.md
+task_plan.md
+picoclaw-test.md
+
 # Planning and docs (we want to track these!)
 # docs/
 # task_plan.md
