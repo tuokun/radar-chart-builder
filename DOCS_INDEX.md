@@ -10,14 +10,16 @@
 
 | 文档路径 | 文档类型 | 说明 |
 |---------|---------|------|
-| `progress.md` | 进度记录 | 项目开发进度日志、测试结果、错误记录 |
 | `task_plan.md` | 任务计划 | 项目整体规划、技术选型、阶段划分 |
+| `progress.md` | 进度记录 | 项目开发进度日志、测试结果、错误记录 |
+| `findings.md` | 调查结果 | 项目调研和发现记录 |
 | `产品需求文档.md` | 需求文档 | 产品功能需求说明 |
-| `IDEA_SETUP.md` | 配置说明 | IntelliJ IDEA 配置指南 |
-| `docs/plans/` | 计划文档 | 各阶段详细设计和实施计划 |
 | `docs/接口文档/` | API文档 | 接口测试指南 |
+| `docs/雷达图生成器登录认证说明.md` | 使用说明 | 登录认证功能说明 |
+| `docs/前端测试说明.md` | 测试说明 | 前端测试指南 |
 | `docs/Docker部署指南.md` | 部署文档 | Docker 容器化部署用户手册 |
 | `deploy/` | 部署配置 | 云服务器部署相关文件 |
+| `radar-chart-builder-web/README.md` | 前端说明 | 前端项目说明文档 |
 
 ---
 
@@ -43,8 +45,6 @@
 | 优先级 | 文档 | 更新内容 |
 |-------|------|---------|
 | P0 | `progress.md` | 添加 Phase 2 开始时间、完成时间、Actions taken、Files created/modified |
-| P0 | `docs/plans/2026-02-16-雷达图核心功能设计.md` | 标记设计完成状态 |
-| P0 | `docs/plans/2026-02-16-雷达图核心功能实施计划.md` | 标记所有Task完成状态 |
 | P1 | `task_plan.md` | 更新 Current Phase、Phase 2 状态标记为 complete |
 | P1 | `docs/接口文档/雷达图API测试指南.md` | 添加测试结果 |
 | P1 | `progress.md` | 添加相关测试结果到 Test Results |
@@ -77,18 +77,15 @@
 | P0 | `task_plan.md` | 更新 Current Phase、Phase 7 状态标记为 complete |
 | P1 | `task_plan.md` | 更新 Decisions Made（如有新决策） |
 
-### Phase 8: Docker 部署准备
+### Phase 8: Docker 部署实施
 
 **完成后需要更新的文档：**
 
 | 优先级 | 文档 | 更新内容 |
 |-------|------|---------|
-| P0 | `progress.md` | 添加 Phase 8 开始时间、完成时间、Actions taken、设计文档信息 |
-| P0 | `task_plan.md` | 更新 Current Phase、Phase 8 状态（design_complete → complete） |
-| P0 | `docs/plans/2026-03-02-docker-deployment-design.md` | 设计文档（已创建） |
-| P0 | `docs/plans/2026-03-02-docker-deployment-implementation.md` | 实施计划（已创建） |
+| P0 | `progress.md` | 添加 Phase 8 开始时间、完成时间、Actions taken |
+| P0 | `task_plan.md` | 更新 Current Phase、Phase 8 状态标记为 complete |
 | P1 | `DOCS_INDEX.md` | 添加新文档索引 |
-| P1 | `deploy/README.md` | 云服务器部署说明 |
 
 ### 通用任务
 
@@ -111,7 +108,6 @@
 | P0 | `task_plan.md` | 更新 Decisions Made |
 | P0 | `task_plan.md` | 更新 关键决策记录 |
 | P1 | `progress.md` | 在 Actions taken 中记录变更原因 |
-| P2 | `progress.md` | 更新 5-Question Reboot Check（如技术方向变化） |
 
 #### 创建/更新 API
 
@@ -130,6 +126,7 @@
 
 **更新进度：**
 - `progress.md` - 完成任何阶段、遇到任何问题时
+- `findings.md` - 有新的调查发现时
 
 **更新计划：**
 - `task_plan.md` - 完成任何阶段、更改技术选型时
@@ -139,7 +136,6 @@
 
 **更新项目说明：**
 - `radar-chart-builder-web/README.md` - 前端项目有重大变更时
-- 项目根目录 `README.md`（如存在）- 整体项目说明更新
 
 ### 按触发场景查找
 
@@ -167,16 +163,13 @@
 
 | 文档 | 最后更新时间 | 内容阶段 |
 |------|-------------|---------|
-| `progress.md` | 2026-03-02 | Phase 1, 2, 4, 7, 8 设计完成 |
-| `task_plan.md` | 2026-03-02 | Phase 1, 2, 4, 7 完成, 8 设计完成 |
+| `task_plan.md` | 2026-03-06 | Phase 1, 2, 4, 7, 8 全部完成 ✅ |
+| `progress.md` | 2026-03-05 | 所有阶段进度记录 |
+| `findings.md` | 2026-02-16 | 调查结果记录 |
 | `docs/Docker部署指南.md` | 2026-02-25 | Docker 部署文档完成 |
-| `docs/plans/2026-03-02-docker-deployment-design.md` | 2026-03-02 | Docker 部署设计文档 |
-| `docs/plans/2026-03-02-docker-deployment-implementation.md` | 2026-03-02 | Docker 部署实施计划 |
 | `产品需求文档.md` | 2026-02-12 | 初始版本 |
-| `IDEA_SETUP.md` | 2026-02-15 | IDEA配置说明 |
-| `docs/plans/2026-02-16-雷达图核心功能设计.md` | 2026-02-16 | 设计完成 |
-| `docs/plans/2026-02-16-雷达图核心功能实施计划.md` | 2026-02-16 | 实施完成 |
 | `docs/接口文档/雷达图API测试指南.md` | 2026-02-17 | API测试完成 |
+| `docs/雷达图生成器登录认证说明.md` | - | 登录认证说明 |
 | `docs/前端测试说明.md` | 2026-02-23 | 前端测试准备 |
 | `radar-chart-builder-web/README.md` | 2026-02-17 | 前端项目说明 |
 
@@ -204,9 +197,9 @@ docs: [简短描述]
 
 **示例：**
 ```
-docs: 更新进度记录（Phase 4 前端开发完成）
+docs: 更新进度记录（Phase 8 Docker 部署完成）
 
-- 更新 progress.md（添加 Phase 4 完成记录）
-- 更新 task_plan.md（标记 Phase 4 完成）
-- 更新 radar-chart-builder-web/README.md（项目说明）
+- 更新 progress.md（添加 Phase 8 完成记录）
+- 更新 task_plan.md（标记 Phase 8 完成）
+- 更新 DOCS_INDEX.md（更新文档状态）
 ```

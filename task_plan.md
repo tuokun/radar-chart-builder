@@ -10,7 +10,7 @@
 构建一个基于SpringBoot 3.5 + Java 21的后端服务和Vue3 + ECharts的前端应用，实现雷达图生成功能，用户可自定义维度并生成可视化图表。
 
 ## Current Phase
-Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
+Phase 8: Docker 部署实施（已完成）
 
 ## Phases
 
@@ -158,7 +158,7 @@ Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
 - `radar-chart-builder-web/src/assets/main.css` (modified - 颜色选择器按钮中文化)
 - **Status:** complete
 
-### Phase 8: Docker 部署实施（配置完成，镜像构建中）
+### Phase 8: Docker 部署实施（已完成）
 <!-- WHAT: 编写 Docker 容器化部署文档并执行实施 -->
 <!-- WHY: 为生产部署做准备，简化部署流程，确保环境一致性 -->
 **文档时间：** 2026-02-25
@@ -183,10 +183,10 @@ Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
   - [x] `docker-compose.yml` - 容器编排
 - [x] 创建操作文档：
   - [x] `docs/Mac-DockerDesktop-后端镜像构建指南.md`
-- [ ] 构建后端 Docker 镜像（进行中）
-- [ ] 构建前端 Docker 镜像
-- [ ] 启动容器测试
-- [ ] 功能验证
+- [x] 构建后端 Docker 镜像（已完成）
+- [x] 构建前端 Docker 镜像（已完成）
+- [x] 启动容器测试（已通过）
+- [x] 功能验证（已通过）
 
 **技术方案：**
 - **容器化方式：** Docker Compose（Docker Desktop 原生支持）
@@ -211,13 +211,13 @@ Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
 - 云服务器迁移方案
 
 **本地测试配置：**
-- 数据库：host.docker.internal（本地 MariaDB）
+- 数据库：192.168.1.109（远程 MariaDB）
 - 用户名：root
 - 密码：cgfhsc
 - 数据库：radar_chart_builder
 - 前端端口：3000
 
-**Status:** planned（设计完成，待实施）
+**Status:** complete
 
 ### Phase 5: 微信小程序开发（待定）
 <!-- WHAT: 开发微信小程序版本 -->
@@ -293,7 +293,7 @@ Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
 | 雪花ID（ASSIGN_ID） | 分布式友好，避免ID冲突 |
 | 不使用Lombok | 项目禁用Lombok，手动编写getter/setter/constructor |
 | API响应格式 | 后端直接返回数据，无包装（code/message/data） |
-
+| Docker 容器化部署 | Docker Compose 编排，后端独立镜像，前端 Nginx 托管静态文件并代理 API |
 ## Errors Encountered
 <!-- WHAT: 开发过程中遇到的错误及解决方案 -->
 <!-- WHY: 避免重复错误，积累经验 -->
@@ -311,7 +311,8 @@ Phase 8: Docker 部署实施（配置文件已完成，镜像构建中）
 | 后端字段命名不统一 | 1 | users表字段改为 create_time/update_time，统一实体和DTO |
 | 测试接口403错误 | 1 | SecurityConfig 添加 /api/health 和 /api/test/** 白名单 |
 | TestController 过度简化 | 1 | 回滚 d→duration，>>20 → /1024/1024，移除 measureLatency |
-
+| Docker 容器无法访问数据库 | 2 | DB_HOST=host.docker.internal 失败（网络隔离），改用数据库实际 IP 192.168.1.109 |
+| 前端 Docker 构建失败 | 1 | vite build 报错 Failed to resolve /src/main.ts，修改 Dockerfile 分别复制 src public ./src ./public（保持目录结构） |
 ## Notes
 <!-- REMINDERS: -->
 <!-- - Update phase status as you progress: pending → in_progress → complete -->

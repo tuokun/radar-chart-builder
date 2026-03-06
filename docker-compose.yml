@@ -1,4 +1,7 @@
-version: '3.8'
+
+# 雷达图生成器 Docker Compose 配置
+# 使用方式: docker-compose up -d
+# 停止服务: docker-compose down
 
 services:
   # 后端服务
@@ -6,6 +9,7 @@ services:
     build:
       context: ./radar-chart-builder-server
       dockerfile: Dockerfile
+    image: radar-chart-builder-server:1.0.0
     container_name: radar-backend
     restart: unless-stopped
     environment:
@@ -16,6 +20,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-43200000}
+    # 如果数据库在宿主机，使用 host.docker.internal
+    # 如果数据库是远程服务器，需要在 .env 中配置实际 IP
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -26,6 +32,7 @@ services:
     build:
       context: ./radar-chart-builder-web
       dockerfile: Dockerfile
+    image: radar-chart-builder-web:1.0.0
     container_name: radar-frontend
     restart: unless-stopped
     ports:
